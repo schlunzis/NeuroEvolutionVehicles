@@ -5,6 +5,6 @@ import org.schlunzis.neuroevolution.view.MainStage;
 public class GeneticAlgorithmCardController {
 
     public GeneticAlgorithmCardController(MainStage mainStage) {
-    
+
     }
 }

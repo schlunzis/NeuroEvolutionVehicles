@@ -1,10 +1,9 @@
 package org.schlunzis.neuroevolution.model.track;
 
+import lombok.Getter;
 import org.schlunzis.neuroevolution.sdk.track.Track;
 import org.schlunzis.neuroevolution.sdk.util.Boundary;
 import org.schlunzis.neuroevolution.sdk.util.PVector;
-
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +49,7 @@ public class PartTrack implements Track {
     @Getter
     private List<Boundary> checkpoints;
 
-    public String getTrackName(){
+    public String getTrackName() {
         return "PartTrack";
     }
 
@@ -83,7 +82,7 @@ public class PartTrack implements Track {
         track[ROWS - 1][COLUMNS - 1] = PART.TOP_LEFT;
         generateWallsAndCheckpoints(ROWS - 1, COLUMNS - 1);
 
-        start = checkpoints.get(0).midPoint();
+        start = checkpoints.getFirst().midPoint();
     }
 
     private void generateTrack() {
@@ -208,7 +207,7 @@ public class PartTrack implements Track {
 
     @Override
     public PVector getStartVelocity() {
-        Boundary boundary = checkpoints.get(0);
+        Boundary boundary = checkpoints.getFirst();
         PVector v = PVector.sub(boundary.getA(), boundary.getB());
         v.rotate(-Math.PI * 0.5);
         v.normalize();
@@ -285,7 +284,7 @@ public class PartTrack implements Track {
             List<Boundary> bounds = Arrays.stream(boundaries).toList();
             for (int i = 0; i < bounds.size() - 1; i++) this.boundaries.add(bounds.get(i));
 
-            this.checkpoint = bounds.get(bounds.size() - 1);
+            this.checkpoint = bounds.getLast();
         }
 
         public DIRECTION getTurn() {

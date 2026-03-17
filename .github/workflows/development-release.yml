@@ -7,33 +7,33 @@ on:
     paths:
       - NeuroEvolutionDemo/src/**
       - NeuroEvolutionDemo/pom.xml
-      
+
 jobs:
   verify:
     name: Verify project
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 21
-      uses: actions/setup-java@v2
-      with:
-        java-version: '21'
-        distribution: 'adopt'
-        cache: maven
-    - name: Verify with Maven
-      run: mvn --batch-mode --update-snapshots verify
-      
+      - uses: actions/checkout@v2
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: maven
+      - name: Verify with Maven
+        run: mvn --batch-mode --update-snapshots verify
+
   clearRelease:
     needs: verify
     name: delete 'development' tag and release
     runs-on: ubuntu-latest
     steps:
-    - uses: dev-drprasad/delete-tag-and-release@v0.2.0
-      with:
-        delete_release: true
-        tag_name: development
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: development
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish:
     needs: clearRelease
@@ -52,26 +52,26 @@ jobs:
             artifact_name: NeuroEvolutionDemo.jar
             asset_name: NeuroEvolutionDemo-Mac.jar
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 21
-      uses: actions/setup-java@v2
-      with:
-        java-version: '21'
-        distribution: 'adopt'
-        cache: maven
-    - name: Generate Jar
-      run: |
-        mvn --batch-mode --update-snapshots clean install package
-    - name: Upload Application
-      uses: svenstaro/upload-release-action@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: NeuroEvolutionDemo/target/${{ matrix.artifact_name }}
-        asset_name: ${{ matrix.asset_name }}
-        prerelease: true
-        overwrite: true
-        tag: development
-        release_name: Automatic Development Build
-        body: This release is an automatic build from the develop branch.
+      - uses: actions/checkout@v2
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: maven
+      - name: Generate Jar
+        run: |
+          mvn --batch-mode --update-snapshots clean install package
+      - name: Upload Application
+        uses: svenstaro/upload-release-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: NeuroEvolutionDemo/target/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          prerelease: true
+          overwrite: true
+          tag: development
+          release_name: Automatic Development Build
+          body: This release is an automatic build from the develop branch.

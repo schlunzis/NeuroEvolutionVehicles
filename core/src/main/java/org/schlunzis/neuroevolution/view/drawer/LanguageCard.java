@@ -1,7 +1,6 @@
 package org.schlunzis.neuroevolution.view.drawer;
 
 import com.jfoenix.controls.JFXButton;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -11,10 +10,10 @@ import lombok.Getter;
 @Getter
 public class LanguageCard extends Pane {
 
-    private Label header;
+    private final Label header;
 
-    private Button englishButton;
-    private Button germanButton;
+    private final Button englishButton;
+    private final Button germanButton;
 
     public LanguageCard() {
         header = new Label();

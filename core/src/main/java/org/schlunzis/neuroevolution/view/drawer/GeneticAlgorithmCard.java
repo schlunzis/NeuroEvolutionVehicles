@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class GeneticAlgorithmCard extends Pane {
 
-    private Label header;
+    private final Label header;
 
     public GeneticAlgorithmCard() {
         header = new Label();

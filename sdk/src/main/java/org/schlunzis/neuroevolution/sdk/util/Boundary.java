@@ -7,17 +7,17 @@ import java.util.List;
  * Class to represent a boundary on the track. Boundaries can be deadly walls,
  * that restrict the area of the track. But they can also be used as
  * checkpoints.
- * 
+ *
  * @author JayPi4c
  */
 public class Boundary {
 
-    private PVector a;
-    private PVector b;
+    private final PVector a;
+    private final PVector b;
 
     /**
      * Creates a new Boundary as a line from (x1, y1) to (x2, y2).
-     * 
+     *
      * @param x1 first point x
      * @param y1 first point y
      * @param x2 second point x
@@ -30,7 +30,7 @@ public class Boundary {
 
     /**
      * Creates a new Boundary as a line from a to b.
-     * 
+     *
      * @param a first point
      * @param b second point
      */
@@ -40,8 +40,8 @@ public class Boundary {
     }
 
     /**
-     * Calculats the middle point of the boundary.
-     * 
+     * Calculates the middle point of the boundary.
+     *
      * @return the middle point
      */
     public PVector midPoint() {
@@ -53,7 +53,7 @@ public class Boundary {
      * will be sequentially connected, so the order of the points is important. If
      * the closed flag is set to true, the last point will be connected to the first
      * point.
-     * 
+     *
      * @param points the list of points
      * @param closed whether the list is closed
      * @return the list of connected Boundaries
@@ -71,7 +71,7 @@ public class Boundary {
 
     /**
      * Getter for the first point.
-     * 
+     *
      * @return the first point
      */
     public PVector getA() {
@@ -80,7 +80,7 @@ public class Boundary {
 
     /**
      * Getter for the second point.
-     * 
+     *
      * @return the second point
      */
     public PVector getB() {
