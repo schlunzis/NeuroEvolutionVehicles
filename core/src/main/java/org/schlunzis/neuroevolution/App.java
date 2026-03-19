@@ -1,46 +1,50 @@
 package org.schlunzis.neuroevolution;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.neuroevolution.model.track.TrackFactory;
 import org.schlunzis.neuroevolution.sdk.track.Track;
 import org.schlunzis.neuroevolution.util.I18nUtils;
 import org.schlunzis.neuroevolution.util.PluginLoader;
-import org.schlunzis.neuroevolution.view.MainStage;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 @Slf4j
 public class App extends Application {
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    @Override
+    public void init() {
+        log.debug("Initializing Application");
+        I18nUtils.setBundle(ResourceBundle.getBundle("lang.messages", Locale.GERMANY));
 
-	@Override
-	public void init() throws Exception {
-		log.debug("Initializing Application");
-		I18nUtils.setBundle(ResourceBundle.getBundle("lang.messages", Locale.GERMANY));
+        PluginLoader.init();
+        List<Track> tracks = PluginLoader.loadPlugins(Track.class);
+        TrackFactory.setCustomTracks(tracks);
+        log.debug("Loaded {} tracks", tracks.size());
+    }
 
-		PluginLoader.init();
-		List<Track> tracks = PluginLoader.loadPlugins(Track.class);
-		TrackFactory.setCustomTracks(tracks);
-		log.debug("Loaded {} tracks", tracks.size());
-	}
+    @Override
+    public void start(Stage stage) throws IOException {
+        log.debug("Starting Application");
+        Parent root = FXMLLoader.load(App.class.getResource("/org/schlunzis/neuroevolution/view/main.fxml"));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(App.class.getResource("/org/schlunzis/neuroevolution/style/theme.css").toExternalForm());
+        stage.setTitle("Demo");
+        stage.setScene(scene);
+        stage.sizeToScene();
+        stage.show();
+    }
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		log.debug("Starting Application");
-		new MainStage();
-	}
-
-	@Override
-	public void stop() throws Exception {
-		log.debug("Stopping Application");
-	}
+    @Override
+    public void stop() {
+        log.debug("Stopping Application");
+    }
 
 }

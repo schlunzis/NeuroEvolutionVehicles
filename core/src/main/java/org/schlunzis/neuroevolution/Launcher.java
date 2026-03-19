@@ -1,5 +1,7 @@
 package org.schlunzis.neuroevolution;
 
+import javafx.application.Application;
+
 /**
  * Launches the whole program.
  *
@@ -13,6 +15,6 @@ public class Launcher {
      * @param args The arguments to pass to the main method.
      */
     static void main(String[] args) {
-        App.main(args);
+        Application.launch(App.class, args);
     }
 }
