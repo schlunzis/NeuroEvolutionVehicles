@@ -1,51 +1,80 @@
 package org.schlunzis.neuroevolution;
 
-import atlantafx.base.theme.PrimerDark;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.neuroevolution.model.track.TrackFactory;
-import org.schlunzis.neuroevolution.sdk.track.Track;
-import org.schlunzis.neuroevolution.util.I18nUtils;
-import org.schlunzis.neuroevolution.util.PluginLoader;
+import org.gnome.adw.*;
+import org.gnome.gtk.Box;
+import org.gnome.gtk.Label;
+import org.gnome.gtk.Orientation;
+import org.gnome.gtk.Paned;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+public class App {
 
-@Slf4j
-public class App extends Application {
 
-    @Override
-    public void init() {
-        log.debug("Initializing Application");
-        I18nUtils.setBundle(ResourceBundle.getBundle("lang.messages", Locale.GERMANY));
-
-        PluginLoader.init();
-        List<Track> tracks = PluginLoader.loadPlugins(Track.class);
-        TrackFactory.setCustomTracks(tracks);
-        log.debug("Loaded {} tracks", tracks.size());
+    static void main(String[] args) {
+        new App(args);
     }
 
-    @Override
-    public void start(Stage stage) throws IOException {
-        log.debug("Starting Application");
-        Parent root = FXMLLoader.load(App.class.getResource("/org/schlunzis/neuroevolution/view/main.fxml"));
-        Scene scene = new Scene(root);
-        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
-        stage.setTitle("Demo");
-        stage.setScene(scene);
-        stage.sizeToScene();
-        stage.show();
+    public App(String[] args) {
+        Application app = new Application("org.schlunzis.neuroevolution");
+        app.onActivate(() -> activate(app));
+        app.run(args);
     }
 
-    @Override
-    public void stop() {
-        log.debug("Stopping Application");
-    }
 
+    private void activate(Application app) {
+
+        ApplicationWindow window = new ApplicationWindow(app);
+        window.setDefaultSize(800, 400);
+
+        // HeaderBar with winddow controls
+        ToolbarView toolbarView = new ToolbarView();
+        window.setContent(toolbarView);
+        HeaderBar headerBar = new HeaderBar();
+        headerBar.setTitleWidget(
+                new WindowTitle("Demo", "Soon to be simulated")
+        );
+        toolbarView.addTopBar(headerBar);
+
+        // Split pane
+        Paned splitPane = new Paned(Orientation.HORIZONTAL);
+        toolbarView.setContent(splitPane);
+
+
+        // Left Pane: Drawing Area
+        // FIXME
+        Label scene = new Label("Hello World!");
+        splitPane.setStartChild(scene);
+
+        // Right pane: tab group
+
+        TabView tabView = new TabView();
+        TabBar tabBar = new TabBar();
+        tabBar.setView(tabView);
+
+        Box configBox = new Box(Orientation.VERTICAL, 0);
+        configBox.append(tabBar);
+        configBox.append(tabView);
+
+        splitPane.setEndChild(configBox);
+
+
+        // tab 1
+        Box tab1Content = new Box(Orientation.VERTICAL, 6);
+        // tab1Content.setMarginTop(12);
+        // tab1Content.setMarginStart(12);
+        tab1Content.append(new Label("Tab 1 content"));
+
+        TabPage tab1 = tabView.append(tab1Content);
+        tab1.setTitle("Tab 1");
+
+        // Tab 2
+        Box tab2Content = new Box(Orientation.VERTICAL, 6);
+        // tab2Content.setMarginTop(12);
+        // tab2Content.setMarginStart(12);
+        tab2Content.append(new Label("Tab 2 content"));
+
+        TabPage tab2 = tabView.append(tab2Content);
+        tab2.setTitle("Tab 2");
+
+        window.present();
+    }
 }
