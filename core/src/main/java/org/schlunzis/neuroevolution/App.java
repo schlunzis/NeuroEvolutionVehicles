@@ -3,6 +3,7 @@ package org.schlunzis.neuroevolution;
 import org.gnome.adw.Application;
 import org.schlunzis.neuroevolution.view.MainWindow;
 
+// FIXME: extract ui logic into separate view files (https://java-gi.org/getting-started/getting_started_05/)
 public class App {
 
     static void main(String[] args) {
