@@ -11,3 +11,7 @@ logs/
 .idea/
 
 *.iml
+
+
+# gtk
+*.gresource

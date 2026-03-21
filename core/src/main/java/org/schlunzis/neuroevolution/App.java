@@ -1,29 +1,43 @@
 package org.schlunzis.neuroevolution;
 
 import org.gnome.adw.Application;
-import org.gnome.adw.Window;
 import org.gnome.gio.ApplicationFlags;
-import org.gnome.gtk.GtkBuilder;
-import org.javagi.base.GErrorException;
+import org.gnome.gio.SimpleAction;
+import org.gnome.glib.Variant;
 
-public class App {
+public class App extends Application {
 
-    private static void activate(Application app) {
-        GtkBuilder builder = new GtkBuilder();
-        try {
-            builder.addFromFile("core/src/main/resources/view.ui");
-        } catch (GErrorException _) {
-        }
-
-        Window window = (Window) builder.getObject("window");
-        window.setApplication(app);
-
-        window.setVisible(true);
+    @Override
+    public void activate() {
+        AppWindow win = new AppWindow(this);
+        win.present();
     }
 
-    static void main(String[] args) {
-        Application app = new Application("org.schlunzis.neuroevolution", ApplicationFlags.DEFAULT_FLAGS);
-        app.onActivate(() -> activate(app));
-        app.run(args);
+    public void preferencesActivated(Variant parameter) {
+        System.out.println("Preferences activated");
+    }
+
+    public void quitActivated(Variant parameter) {
+        super.quit();
+    }
+
+    @Override
+    protected void startup() {
+        super.startup();
+        var preferences = new SimpleAction("preferences", null);
+        preferences.onActivate(this::preferencesActivated);
+        addAction(preferences);
+
+        var quit = new SimpleAction("quit", null);
+        quit.onActivate(this::quitActivated);
+        addAction(quit);
+
+        String[] quitAccels = new String[]{"<Ctrl>q"};
+        setAccelsForAction("app.quit", quitAccels);
+    }
+
+    public App() {
+        setApplicationId("org.schlunzis.neuroevolution");
+        setFlags(ApplicationFlags.DEFAULT_FLAGS);
     }
 }

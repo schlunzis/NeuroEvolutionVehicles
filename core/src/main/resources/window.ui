@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-    <object id="window" class="AdwWindow">
+    <template class="org_schlunzis_neuroevolution_AppWindow" parent="AdwApplicationWindow">
         <property name="default-width">800</property>
         <property name="default-height">400</property>
         <child>
@@ -13,6 +13,12 @@
                                 <property name="subtitle" translatable="yes">Soon to be simulated</property>
                             </object>
                         </property>
+                        <child type="end">
+                            <object class="GtkMenuButton" id="gears">
+                                <property name="icon-name">settings</property>
+                                <property name="direction">none</property>
+                            </object>
+                        </child>
                     </object>
                 </child>
                 <property name="content">
@@ -64,5 +70,5 @@
                 </property>
             </object>
         </child>
-    </object>
+    </template>
 </interface>
