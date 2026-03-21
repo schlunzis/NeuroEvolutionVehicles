@@ -1,23 +1,29 @@
 package org.schlunzis.neuroevolution;
 
 import org.gnome.adw.Application;
-import org.schlunzis.neuroevolution.view.MainWindow;
+import org.gnome.adw.Window;
+import org.gnome.gio.ApplicationFlags;
+import org.gnome.gtk.GtkBuilder;
+import org.javagi.base.GErrorException;
 
-// FIXME: extract ui logic into separate view files (https://java-gi.org/getting-started/getting_started_05/)
 public class App {
 
-    static void main(String[] args) {
-        new App(args);
+    private static void activate(Application app) {
+        GtkBuilder builder = new GtkBuilder();
+        try {
+            builder.addFromFile("core/src/main/resources/view.ui");
+        } catch (GErrorException _) {
+        }
+
+        Window window = (Window) builder.getObject("window");
+        window.setApplication(app);
+
+        window.setVisible(true);
     }
 
-    public App(String[] args) {
-        Application app = new Application("org.schlunzis.neuroevolution");
+    static void main(String[] args) {
+        Application app = new Application("org.schlunzis.neuroevolution", ApplicationFlags.DEFAULT_FLAGS);
         app.onActivate(() -> activate(app));
         app.run(args);
-    }
-
-    private void activate(Application app) {
-        MainWindow window = new MainWindow(app);
-        window.present();
     }
 }
