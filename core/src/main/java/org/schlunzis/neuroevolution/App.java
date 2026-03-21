@@ -1,5 +1,6 @@
 package org.schlunzis.neuroevolution;
 
+import atlantafx.base.theme.PrimerDark;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,7 +36,7 @@ public class App extends Application {
         log.debug("Starting Application");
         Parent root = FXMLLoader.load(App.class.getResource("/org/schlunzis/neuroevolution/view/main.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(App.class.getResource("/org/schlunzis/neuroevolution/style/theme.css").toExternalForm());
+        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
         stage.setTitle("Demo");
         stage.setScene(scene);
         stage.sizeToScene();
