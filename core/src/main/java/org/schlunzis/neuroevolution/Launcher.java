@@ -2,6 +2,7 @@ package org.schlunzis.neuroevolution;
 
 import org.gnome.gio.Resource;
 import org.javagi.base.GErrorException;
+import org.schlunzis.neuroevolution.view.App;
 
 public class Launcher {
 

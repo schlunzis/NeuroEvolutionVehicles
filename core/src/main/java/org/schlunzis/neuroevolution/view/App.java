@@ -1,4 +1,4 @@
-package org.schlunzis.neuroevolution;
+package org.schlunzis.neuroevolution.view;
 
 import org.freedesktop.cairo.Cairo;
 import org.gnome.adw.Application;
