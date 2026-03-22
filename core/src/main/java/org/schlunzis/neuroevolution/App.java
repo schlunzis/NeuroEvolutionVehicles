@@ -1,5 +1,6 @@
 package org.schlunzis.neuroevolution;
 
+import org.freedesktop.cairo.Cairo;
 import org.gnome.adw.Application;
 import org.gnome.gio.ApplicationFlags;
 import org.gnome.gio.SimpleAction;
@@ -9,6 +10,11 @@ public class App extends Application {
 
     @Override
     public void activate() {
+        try {
+            Cairo.ensureInitialized();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
         AppWindow win = new AppWindow(this);
         win.present();
     }
