@@ -15,7 +15,7 @@
                         </property>
                         <child type="end">
                             <object class="GtkMenuButton" id="gears">
-                                <property name="icon-name">settings</property>
+                                <!-- <property name="icon-name">settings-symbolic</property> -->
                                 <property name="direction">none</property>
                             </object>
                         </child>

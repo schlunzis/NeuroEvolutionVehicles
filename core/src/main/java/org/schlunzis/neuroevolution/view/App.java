@@ -1,6 +1,7 @@
 package org.schlunzis.neuroevolution.view;
 
 import org.freedesktop.cairo.Cairo;
+import org.gnome.adw.AboutDialog;
 import org.gnome.adw.Application;
 import org.gnome.gio.ApplicationFlags;
 import org.gnome.gio.SimpleAction;
@@ -27,12 +28,30 @@ public class App extends Application {
         super.quit();
     }
 
+
+    public void aboutActivated(Variant parameter) {
+        String[] developers = {"Tilman Holube", "Jonas Pohl"};
+        var about = AboutDialog.builder()
+                .setApplicationName("NeuroEvolution")
+                .setApplicationIcon("org.schlunzis.neuroevolution")
+                .setDeveloperName("Schlunzis")
+                .setDevelopers(developers)
+                .setVersion("0.0.1")
+                .setCopyright("© 2026 Schlunzis")
+                .build();
+        about.present(this.getActiveWindow());
+    }
+
     @Override
     protected void startup() {
         super.startup();
         var preferences = new SimpleAction("preferences", null);
         preferences.onActivate(this::preferencesActivated);
         addAction(preferences);
+
+        var about = new SimpleAction("about", null);
+        about.onActivate(this::aboutActivated);
+        addAction(about);
 
         var quit = new SimpleAction("quit", null);
         quit.onActivate(this::quitActivated);

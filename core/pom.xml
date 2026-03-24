@@ -91,7 +91,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <workingDirectory>${project.basedir}/src/main/resources</workingDirectory>
+                            <workingDirectory>${project.basedir}/src/main/resources/gresources</workingDirectory>
                             <executable>glib-compile-resources</executable>
                             <arguments>
                                 <argument>neuroevolution.gresource.xml</argument>
