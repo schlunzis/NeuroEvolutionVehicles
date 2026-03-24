@@ -10,6 +10,7 @@ import org.javagi.gtk.annotations.GtkTemplate;
 import org.schlunzis.neuroevolution.model.World;
 import org.schlunzis.neuroevolution.simulation.SimulationController;
 import org.schlunzis.neuroevolution.view.track.TrackView;
+import org.schlunzis.neuroevolution.view.track.VehiclesView;
 
 @GtkTemplate(ui = "/org/schlunzis/neuroevolution/window.ui")
 public class AppWindow extends ApplicationWindow {
@@ -20,6 +21,9 @@ public class AppWindow extends ApplicationWindow {
     @GtkChild
     public TrackView trackView;
 
+    @GtkChild
+    public VehiclesView vehiclesView;
+
     private SimulationController controller;
 
     public AppWindow(App app) {
@@ -28,10 +32,14 @@ public class AppWindow extends ApplicationWindow {
 
     @InstanceInit
     public void init() {
-        World world = new World(20);
-        controller = new SimulationController(world, trackView::queueDraw);
+        World world = new World();
+        controller = new SimulationController(world, () -> {
+            trackView.queueDraw();
+            vehiclesView.update();
+        });
 
         trackView.setWorld(world);
+        vehiclesView.setWorld(world);
 
         GtkBuilder builder = GtkBuilder.fromResource("/org/schlunzis/neuroevolution/gears-menu.ui");
         MenuModel menu = (MenuModel) builder.getObject("menu");

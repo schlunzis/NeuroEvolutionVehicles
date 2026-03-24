@@ -1,13 +1,11 @@
 package org.schlunzis.neuroevolution.util;
 
-import lombok.SneakyThrows;
-
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -34,7 +32,7 @@ public class PluginLoader {
     /**
      * Because of the call to {@link #classImplementsInterface} this method will
      * only work for interfaces
-     * 
+     *
      * @param <T>   The interface type of the plugin
      * @param clazz
      * @return
@@ -61,7 +59,7 @@ public class PluginLoader {
                 Enumeration<?> e = jarFile.entries();
 
                 // Create a URL for the jar
-                URL[] urls = { new URL("jar:file:" + plugins[i].getAbsolutePath() + "!/") };
+                URL[] urls = {new URL("jar:file:" + plugins[i].getAbsolutePath() + "!/")};
                 ClassLoader cl = URLClassLoader.newInstance(urls);
 
                 while (e.hasMoreElements()) {
@@ -104,13 +102,12 @@ public class PluginLoader {
 
     /**
      * <a href=https://stackoverflow.com/a/11166880> source </a>
-     * 
+     *
      * @return
      */
-    @SneakyThrows(UnsupportedEncodingException.class)
     private static String getProgramPath() {
         URL url = PluginLoader.class.getProtectionDomain().getCodeSource().getLocation();
-        String jarPath = URLDecoder.decode(url.getFile(), "UTF-8");
+        String jarPath = URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8);
         String parentPath = new File(jarPath).getParentFile().getPath();
         return parentPath;
     }

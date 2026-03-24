@@ -5,11 +5,15 @@ import org.javagi.base.GErrorException;
 import org.javagi.gobject.types.Types;
 import org.schlunzis.neuroevolution.view.App;
 import org.schlunzis.neuroevolution.view.track.TrackView;
+import org.schlunzis.neuroevolution.view.track.VehicleView;
+import org.schlunzis.neuroevolution.view.track.VehiclesView;
 
 public class Launcher {
 
     static {
         Types.register(TrackView.class);
+        Types.register(VehiclesView.class);
+        Types.register(VehicleView.class);
     }
 
     static void main(String[] args) throws GErrorException {

@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.freedesktop.cairo.Context;
 import org.gnome.gtk.DrawingArea;
 import org.javagi.gobject.annotations.InstanceInit;
-import org.schlunzis.neuroevolution.model.Vehicle;
 import org.schlunzis.neuroevolution.model.World;
 import org.schlunzis.neuroevolution.sdk.track.Track;
 import org.schlunzis.neuroevolution.sdk.util.Boundary;
@@ -36,13 +35,7 @@ public class TrackView extends DrawingArea {
         cr.setSourceRGB(0, 0.5, 0);
         cr.paint();
 
-
         cr.setSourceRGB(0, 0, 1);
-
-        for (Vehicle v : world.getGa().getPopulation()) {
-            cr.arc(v.getPos().x * width, v.getPos().y * height, 5, 0, 2 * Math.PI);
-            cr.stroke();
-        }
 
         Track track = world.getTrack();
         cr.setSourceRGB(0, 0, 0);

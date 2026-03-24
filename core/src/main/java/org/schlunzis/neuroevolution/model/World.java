@@ -10,7 +10,7 @@ public class World {
     private final Track track = TrackFactory.createTrack(TrackFactory.CONVEX_HULL);
     private final GeneticAlgorithm ga = new GeneticAlgorithm();
 
-    public World(int carCount) {
+    public World() {
         track.buildTrack();
         ga.setTrack(track);
     }

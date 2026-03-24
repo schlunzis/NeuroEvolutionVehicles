@@ -6,14 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.neuroevolution.model.track.TrackFactory;
 import org.schlunzis.neuroevolution.sdk.track.Track;
 import org.schlunzis.neuroevolution.sdk.util.PVector;
-import org.schlunzis.neuroevolution.util.Observable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Slf4j
-public class GeneticAlgorithm extends Observable {
+public class GeneticAlgorithm {
 
     private double mutationRate = 0.05;
     private int populationSize = 100;
@@ -31,6 +30,13 @@ public class GeneticAlgorithm extends Observable {
     private Track track;
 
     private Vehicle prevBest;
+
+
+    private List<Runnable> newGenerationHooks = new ArrayList<>();
+
+    public void addNewGenerationHoook(Runnable r) {
+        newGenerationHooks.add(r);
+    }
 
     @Synchronized("trackLock")
     public void setTrack(Track track) {
@@ -95,13 +101,14 @@ public class GeneticAlgorithm extends Observable {
                     track.buildTrack();
                     nextGeneration();
                     generationCount++;
+                    for (Runnable r : newGenerationHooks)
+                        r.run();
+
                     log.debug("Generation #{}", generationCount);
                 }
 
             }
         }
-        setChanged();
-        notifyAllObservers();
     }
 
     private void nextGeneration() {
