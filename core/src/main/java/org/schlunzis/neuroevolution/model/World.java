@@ -1,6 +1,8 @@
 package org.schlunzis.neuroevolution.model;
 
 import lombok.Getter;
+import org.schlunzis.neuroevolution.model.track.TrackFactory;
+import org.schlunzis.neuroevolution.sdk.track.Track;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,28 +10,22 @@ import java.util.List;
 public class World {
     @Getter
     private final List<Car> cars = new ArrayList<>();
-    private double width;
-    private double height;
 
-    public World(int carCount, double width, double height) {
-        this.width = width;
-        this.height = height;
+    @Getter
+    private final Track track = TrackFactory.createTrack(TrackFactory.PART_TRACK);
+
+    public World(int carCount) {
+        track.buildTrack();
         for (int i = 0; i < carCount; i++) {
-            cars.add(new Car(width / 2, height / 2));
+            cars.add(new Car(.5, .5));
         }
     }
-
 
     public void update() {
         for (Car car : cars) {
             car.update();
-            car.clamp(width, height);
+            car.clamp();
         }
-    }
-
-    public void resize(double width, double height) {
-        this.width = width;
-        this.height = height;
     }
 
 }

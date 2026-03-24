@@ -19,7 +19,7 @@ public class Car {
         this.x = x;
         this.y = y;
         this.direction = RNG.nextDouble() * 2 * Math.PI; // random initial direction
-        this.speed = 2.0;
+        this.speed = 1 / 200d;
     }
 
     public void update() {
@@ -30,9 +30,9 @@ public class Car {
         y += Math.sin(direction) * speed;
     }
 
-    public void clamp(double width, double height) {
-        x = Math.max(0, Math.min(width, x));
-        y = Math.max(0, Math.min(height, y));
+    public void clamp() {
+        x = Math.max(0, Math.min(1, x));
+        y = Math.max(0, Math.min(1, y));
     }
 
 

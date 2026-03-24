@@ -25,7 +25,7 @@
                     <object class="GtkPaned">
                         <property name="orientation">horizontal</property>
                         <child>
-                            <object class="GtkDrawingArea" id="scene">
+                            <object class="org_schlunzis_neuroevolution_view_track_TrackView" id="trackView">
                                 <property name="hexpand">true</property>
                                 <property name="vexpand">true</property>
                                 <property name="width-request">400</property>
