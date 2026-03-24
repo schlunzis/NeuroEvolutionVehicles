@@ -3,6 +3,7 @@ package org.schlunzis.neuroevolution.view.track;
 import lombok.Getter;
 import org.freedesktop.cairo.Context;
 import org.gnome.gtk.DrawingArea;
+import org.gnome.gtk.GestureClick;
 import org.javagi.gobject.annotations.InstanceInit;
 import org.schlunzis.neuroevolution.model.Vehicle;
 
@@ -18,7 +19,11 @@ public class VehicleView extends DrawingArea {
     @InstanceInit
     public void init() {
         this.setDrawFunc(this::draw);
-        this.co
+        GestureClick gesture = new GestureClick();
+        gesture.onPressed((_, _, _) -> {
+            System.out.println(vehicle.getId());
+        });
+        this.addController(gesture);
     }
 
     private void draw(DrawingArea drawingArea, Context cr, int width, int height) {

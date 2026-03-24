@@ -7,7 +7,7 @@ import org.schlunzis.neuroevolution.sdk.track.Track;
 @Getter
 public class World {
 
-    private final Track track = TrackFactory.createTrack(TrackFactory.CONVEX_HULL);
+    private final Track track = TrackFactory.createTrack(TrackFactory.PART_TRACK);
     private final GeneticAlgorithm ga = new GeneticAlgorithm();
 
     public World() {
