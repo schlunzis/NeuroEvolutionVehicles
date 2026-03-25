@@ -8,6 +8,7 @@ import org.schlunzis.neuroevolution.sdk.util.Boundary;
 import org.schlunzis.neuroevolution.sdk.util.SVector;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ConvexHullTrack implements Track {
@@ -107,7 +108,7 @@ public class ConvexHullTrack implements Track {
     }
 
     private ArrayList<SVector> getConvexHull(ArrayList<SVector> points) {
-        points.sort((p1, p2) -> p1.x() < p2.y() ? -1 : 1);
+        points.sort(Comparator.comparingDouble(SVector::x));
         ArrayList<SVector> hull = new ArrayList<>();
         SVector leftMost = points.getFirst();
         SVector currentVertex = leftMost;
