@@ -1,5 +1,6 @@
 package org.schlunzis.neuroevolution.view;
 
+import lombok.extern.slf4j.Slf4j;
 import org.freedesktop.cairo.Cairo;
 import org.gnome.adw.AboutDialog;
 import org.gnome.adw.Application;
@@ -7,6 +8,7 @@ import org.gnome.gio.ApplicationFlags;
 import org.gnome.gio.SimpleAction;
 import org.gnome.glib.Variant;
 
+@Slf4j
 public class App extends Application {
 
     @Override

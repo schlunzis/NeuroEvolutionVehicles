@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.gnome.gtk.Fixed;
 import org.schlunzis.neuroevolution.model.Vehicle;
 import org.schlunzis.neuroevolution.model.World;
-import org.schlunzis.neuroevolution.sdk.util.PVector;
+import org.schlunzis.neuroevolution.sdk.util.SVector;
 
 import java.lang.foreign.MemorySegment;
 import java.util.ArrayList;
@@ -32,13 +32,13 @@ public class VehiclesView extends Fixed {
         int fixedHeight = this.getHeight();
         for (VehicleView view : views) {
             Vehicle vehicle = view.getVehicle();
-            PVector pos = vehicle.getPos();
+            SVector pos = vehicle.getPos();
             double width = vehicle.getVechileWidth() * fixedWidth;
             double height = vehicle.getVehicleHeight() * fixedHeight;
-            double posX = (pos.x * fixedWidth) - width / 2;
-            double posY = (pos.y * fixedHeight) - height / 2;
+            double posX = (pos.x() * fixedWidth) - width / 2;
+            double posY = (pos.y() * fixedHeight) - height / 2;
 
-            view.setDirection(Math.toDegrees(vehicle.getVel().heading()));
+            view.setDirection(Math.toDegrees(vehicle.getVel().getRawAngle()));
             this.move(view, posX, posY);
             view.setContentWidth((int) width);
             view.setContentHeight((int) height);

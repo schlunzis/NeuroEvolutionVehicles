@@ -36,23 +36,27 @@ public class AppWindow extends ApplicationWindow {
 
     @InstanceInit
     public void init() {
-        World world = new World();
-        controller = new SimulationController(world, () -> {
-            trackView.queueDraw();
-            vehiclesView.update();
-        });
+        try {
+            World world = new World();
+            controller = new SimulationController(world, () -> {
+                trackView.queueDraw();
+                vehiclesView.update();
+            });
 
-        trackView.setWorld(world);
-        vehiclesView.setWorld(world);
+            trackView.setWorld(world);
+            vehiclesView.setWorld(world);
 
-        GtkBuilder builder = GtkBuilder.fromResource("/org/schlunzis/neuroevolution/gears-menu.ui");
-        MenuModel menu = (MenuModel) builder.getObject("menu");
-        gears.setMenuModel(menu);
-        controller.start();
+            GtkBuilder builder = GtkBuilder.fromResource("/org/schlunzis/neuroevolution/gears-menu.ui");
+            MenuModel menu = (MenuModel) builder.getObject("menu");
+            gears.setMenuModel(menu);
+            controller.start();
 
-        toggleButton.onClicked(() ->
-                controller.toggle()
-        );
+            toggleButton.onClicked(() ->
+                    controller.toggle()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

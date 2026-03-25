@@ -1,7 +1,7 @@
 package org.schlunzis.neuroevolution.sdk.track;
 
 import org.schlunzis.neuroevolution.sdk.util.Boundary;
-import org.schlunzis.neuroevolution.sdk.util.PVector;
+import org.schlunzis.neuroevolution.sdk.util.SVector;
 
 import java.util.List;
 
@@ -31,9 +31,9 @@ public interface Track {
      * on the given track.
      *
      * @return PVector containing the tracks start position
-     * @see PVector
+     * @see SVector
      */
-    PVector getStart();
+    SVector getStart();
 
     /**
      * Returns a list of boundaries describing the checkpoints on the track. The
@@ -63,9 +63,9 @@ public interface Track {
      * The returned vector must be normalized.
      *
      * @return starting direction on the given startpoint.
-     * @see PVector
+     * @see SVector
      */
-    PVector getStartVelocity();
+    SVector getStartVelocity();
 
     /**
      * Returns the name identifying the track.
