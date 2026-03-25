@@ -2,6 +2,7 @@ package org.schlunzis.neuroevolution.view;
 
 import org.gnome.adw.ApplicationWindow;
 import org.gnome.gio.MenuModel;
+import org.gnome.gtk.Button;
 import org.gnome.gtk.GtkBuilder;
 import org.gnome.gtk.MenuButton;
 import org.javagi.gobject.annotations.InstanceInit;
@@ -24,6 +25,9 @@ public class AppWindow extends ApplicationWindow {
     @GtkChild
     public VehiclesView vehiclesView;
 
+    @GtkChild
+    public Button toggleButton;
+
     private SimulationController controller;
 
     public AppWindow(App app) {
@@ -45,6 +49,10 @@ public class AppWindow extends ApplicationWindow {
         MenuModel menu = (MenuModel) builder.getObject("menu");
         gears.setMenuModel(menu);
         controller.start();
+
+        toggleButton.onClicked(() ->
+                controller.toggle()
+        );
     }
 
 

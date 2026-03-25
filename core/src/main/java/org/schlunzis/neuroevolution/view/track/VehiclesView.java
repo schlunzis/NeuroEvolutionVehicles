@@ -38,7 +38,7 @@ public class VehiclesView extends Fixed {
             double posX = (pos.x * fixedWidth) - width / 2;
             double posY = (pos.y * fixedHeight) - height / 2;
 
-
+            view.setDirection(Math.toDegrees(vehicle.getVel().heading()));
             this.move(view, posX, posY);
             view.setContentWidth((int) width);
             view.setContentHeight((int) height);
