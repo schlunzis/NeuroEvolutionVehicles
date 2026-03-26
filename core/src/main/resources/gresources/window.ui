@@ -24,14 +24,15 @@
                 <property name="content">
                     <object class="GtkPaned">
                         <property name="orientation">horizontal</property>
-                        <child>
+                        <property name="shrink-start-child">false</property>
+                        <property name="start-child">
                             <object class="org_schlunzis_neuroevolution_view_simulation_SimulationView"
                                     id="simulationView">
                                 <property name="width-request">400</property>
                                 <property name="height-request">400</property>
                             </object>
-                        </child>
-                        <child>
+                        </property>
+                        <property name="end-child">
                             <object class="GtkBox">
                                 <property name="orientation">vertical</property>
                                 <child>
@@ -73,7 +74,7 @@
                                     </object>
                                 </child>
                             </object>
-                        </child>
+                        </property>
                     </object>
                 </property>
             </object>

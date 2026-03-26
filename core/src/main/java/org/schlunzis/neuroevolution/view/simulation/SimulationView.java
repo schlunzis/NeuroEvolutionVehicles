@@ -26,10 +26,8 @@ public class SimulationView extends Box {
     }
 
     public void update() {
-        if (trackView != null)
-            trackView.queueDraw();
-        if (vehiclesView != null)
-            vehiclesView.update();
+        trackView.queueDraw();
+        vehiclesView.update();
     }
 
 }

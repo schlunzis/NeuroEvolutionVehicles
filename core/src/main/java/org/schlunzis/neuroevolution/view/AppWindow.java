@@ -35,9 +35,7 @@ public class AppWindow extends ApplicationWindow {
         try {
             World world = new World();
             simulationView.setWorld(world);
-            controller = new SimulationController(world, () -> {
-                simulationView.update();
-            });
+            controller = new SimulationController(world, () -> simulationView.update());
 
             GtkBuilder builder = GtkBuilder.fromResource("/org/schlunzis/neuroevolution/gears-menu.ui");
             MenuModel menu = (MenuModel) builder.getObject("menu");

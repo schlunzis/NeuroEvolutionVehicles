@@ -18,7 +18,6 @@ public class Launcher {
         Types.register(TrackView.class);
         Types.register(VehiclesView.class);
         Types.register(VehicleView.class);
-        Types.register(SimulationView.class);
     }
 
     static void main(String[] args) throws GErrorException {
