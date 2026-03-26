@@ -23,7 +23,7 @@ public class VehiclesView extends Fixed {
 
     public void setWorld(World world) {
         this.world = world;
-        world.getGa().addNewGenerationHoook(this::reset);
+        world.getGa().addNewGenerationHook(this::reset);
         reset();
     }
 
@@ -33,7 +33,7 @@ public class VehiclesView extends Fixed {
         for (VehicleView view : views) {
             Vehicle vehicle = view.getVehicle();
             PVector pos = vehicle.getPos();
-            double width = vehicle.getVechileWidth() * fixedWidth;
+            double width = vehicle.getVehicleWidth() * fixedWidth;
             double height = vehicle.getVehicleHeight() * fixedHeight;
             double posX = (pos.x * fixedWidth) - width / 2;
             double posY = (pos.y * fixedHeight) - height / 2;

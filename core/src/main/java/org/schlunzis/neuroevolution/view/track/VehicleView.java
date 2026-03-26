@@ -2,7 +2,10 @@ package org.schlunzis.neuroevolution.view.track;
 
 import lombok.Getter;
 import org.freedesktop.cairo.Context;
+import org.gnome.gdk.Texture;
 import org.gnome.graphene.Point;
+import org.gnome.graphene.Rect;
+import org.gnome.graphene.Size;
 import org.gnome.gtk.DrawingArea;
 import org.gnome.gtk.GestureClick;
 import org.gnome.gtk.Snapshot;
@@ -19,6 +22,12 @@ public class VehicleView extends DrawingArea {
         this.vehicle = vehicle;
     }
 
+    private static Texture carTexture;
+
+    static {
+        carTexture = Texture.fromResource("/icons/scalable/actions/car-top-view.svg");
+    }
+
     @InstanceInit
     public void init() {
         this.setDrawFunc(this::draw);
@@ -30,8 +39,9 @@ public class VehicleView extends DrawingArea {
     }
 
     private void draw(DrawingArea drawingArea, Context cr, int width, int height) {
-        cr.setSourceRGB(0, 0, 1);
-        cr.paint();
+        cr.setSourceRGB(1, 0, 0);
+        cr.rectangle(0, 0, height * 2, width * 2);
+        cr.stroke();
     }
 
 
@@ -47,7 +57,8 @@ public class VehicleView extends DrawingArea {
         int h = this.getHeight();
 
         snapshot.translate(new Point(w / 2f, h / 2f));
-        snapshot.rotate((float) angleDeg);
+        snapshot.rotate((float) angleDeg + 90); // +90 because the car texture is oriented upwards
+        snapshot.appendTexture(carTexture, new Rect(new Point(-h, 0), new Size(2 * h, 2 * w)));
         snapshot.translate(new Point(-w / 2f, -h / 2f));
 
         // draw content (image / child / custom rendering)
