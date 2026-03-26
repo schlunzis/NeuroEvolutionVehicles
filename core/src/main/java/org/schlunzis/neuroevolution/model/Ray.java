@@ -20,7 +20,7 @@ public class Ray {
         x = x - pos.x();
         y = y - pos.y();
         dir = new SVector(x, y)
-                .normalize();
+                .normalized();
     }
 
     public SVector cast(Boundary wall) {

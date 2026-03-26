@@ -234,7 +234,7 @@ public class ConvexHullTrack implements Track {
         Boundary boundary = checkpoints.getFirst();
         return SVector.sub(boundary.getA(), boundary.getB())
                 .rotate(Math.PI * 0.5)
-                .normalize();
+                .normalized();
     }
 
 }

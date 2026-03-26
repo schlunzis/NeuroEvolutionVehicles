@@ -77,7 +77,7 @@ public class Vehicle {
             double y = random.nextDouble(-d2, d2);
             vel = new SVector(x, y);
         } else
-            vel = startVel.normalize().mult(1 / 400d);
+            vel = startVel.normalized().mult(1 / 400d);
 
         this.startVel = new SVector(vel);
         acc = new SVector();
@@ -142,7 +142,7 @@ public class Vehicle {
         double[][] output = brain.query(inputs).toArray();
         double angle = map(output[0][0], 0, 1, -Math.PI, Math.PI);
         double speed = map(output[1][0], 0, 1, 0, maxSpeed);
-        angle += vel.getRawAngle();
+        angle += vel.rawAngle();
         SVector steering = SVector.fromAngle(angle)
                 .withMag(speed)
                 .sub(vel)
@@ -162,7 +162,7 @@ public class Vehicle {
             }
             rays = new ArrayList<>();
             for (int a = -45; a <= 45; a += 15) {
-                rays.add(new Ray(this.pos, Math.toRadians(a) + this.vel.getRawAngle()));
+                rays.add(new Ray(this.pos, Math.toRadians(a) + this.vel.rawAngle()));
             }
         }
     }
