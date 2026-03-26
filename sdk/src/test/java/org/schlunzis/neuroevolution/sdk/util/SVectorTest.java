@@ -289,4 +289,62 @@ class SVectorTest {
         assertEquals(-1, f.rawAngle(), 0.000001);
     }
 
+    @Test
+    void testRotateZero() {
+        SVector v = new SVector(0, 0, 0).rotate(Math.PI / 2);
+
+        assertEquals(0, v.x());
+        assertEquals(0, v.y());
+        assertEquals(0, v.z());
+    }
+
+    @Test
+    void testRotate() {
+        SVector a = new SVector(1, 0, 0).rotate(0);
+        SVector b = new SVector(1, 0, 0).rotate(Math.PI / 2);
+        SVector c = new SVector(1, 2, 3).rotate(Math.PI);
+
+        assertEquals(1, a.x(), 0.000001);
+        assertEquals(0, a.y(), 0.000001);
+        assertEquals(0, a.z());
+        assertEquals(0, b.x(), 0.000001);
+        assertEquals(1, b.y(), 0.000001);
+        assertEquals(0, b.z());
+        assertEquals(-1, c.x(), 0.000001);
+        assertEquals(-2, c.y(), 0.000001);
+        assertEquals(3, c.z());
+    }
+
+    @Test
+    void testDist() {
+        SVector a = new SVector(1, 0.5, 1);
+        SVector b = new SVector(2, 0.5, 2);
+
+        double distance = a.dist(b);
+
+        assertEquals(Math.sqrt(2), distance, 0.000001);
+    }
+
+    @Test
+    void testDistSq() {
+        SVector a = new SVector(1, 0.5, 1);
+        SVector b = new SVector(2, 0.5, 2);
+
+        double distance = a.distSq(b);
+
+        assertEquals(2, distance, 0.000001);
+    }
+
+    @Test
+    void testCross() {
+        SVector a = new SVector(1, 0, 0);
+        SVector b = new SVector(0, 1, 0);
+
+        SVector cross = a.cross(b);
+
+        assertEquals(0, cross.x(), 0.000001);
+        assertEquals(0, cross.y(), 0.000001);
+        assertEquals(1, cross.z(), 0.000001);
+    }
+
 }

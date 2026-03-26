@@ -219,20 +219,48 @@ public record SVector(double x, double y, double z) {
         return Math.atan2(y, x);
     }
 
+    /// Returns a new vector that is this vector rotated in 2D space by the given angle in radians.
+    ///
+    /// z is ignored.
+    ///
+    /// @param angle the angle to rotate this vector by in radians
+    /// @return a new vector that is this vector rotated by the given angle in radians
     public SVector rotate(double angle) {
         double x = x() * Math.cos(angle) - y() * Math.sin(angle);
         double y = x() * Math.sin(angle) + y() * Math.cos(angle);
         return new SVector(x, y, z());
     }
 
-    public static double dist(SVector v1, SVector v2) {
-        return Math.sqrt(Math.pow(v1.x() - v2.x(), 2) + Math.pow(v1.y() - v2.y(), 2));
+    /// Returns the Euclidean distance of this vector to another vector.
+    ///
+    /// @param v2 the second vector
+    /// @return the distance of the two given vectors
+    public double dist(SVector v2) {
+        return Math.sqrt(
+                Math.pow(x() - v2.x(), 2) +
+                        Math.pow(y() - v2.y(), 2) +
+                        Math.pow(z() - v2.z(), 2)
+        );
     }
 
-    public static double distSq(SVector v1, SVector v2) {
-        return Math.pow(v1.x() - v2.x(), 2) + Math.pow(v1.y() - v2.y(), 2);
+    /// Returns the squared Euclidean distance of this vector to another vector.
+    ///
+    /// This method is faster than [SVector#dist(SVector, SVector)].
+    /// Thus, you can use this method to take advantage of the monotone property of the squaring function to
+    /// speed up your calculations, if you don't need the actual distance, but only a comparison of distances.
+    ///
+    /// @param v2 the second vector
+    /// @return the squared distance of the two given vectors
+    public double distSq(SVector v2) {
+        return Math.pow(x() - v2.x(), 2) +
+                Math.pow(y() - v2.y(), 2) +
+                Math.pow(z() - v2.z(), 2);
     }
 
+    /// Calculates the cross product of this vector with another vector.
+    ///
+    /// @param v the vector to calculate the cross product with
+    /// @return a new vector that is the cross product of this vector and the given vector
     public SVector cross(SVector v) {
         return new SVector(
                 y() * v.z() - v.y() * z(),

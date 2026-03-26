@@ -128,7 +128,7 @@ public class Vehicle {
             for (Boundary wall : walls) {
                 SVector pt = ray.cast(wall);
                 if (pt != null) {
-                    double d = SVector.dist(pos, pt);
+                    double d = pos.dist(pt);
                     if (d < rec)
                         rec = d;
                 }
@@ -190,7 +190,7 @@ public class Vehicle {
 
     private double pldistance(SVector p1, SVector p2, double x, double y) {
         double num = Math.abs((p2.y() - p1.y()) * x - (p2.x() - p1.x()) * y + p2.x() * p1.y() - p2.y() * p1.x());
-        double den = SVector.dist(p1, p2);
+        double den = p1.dist(p2);
         return num / den;
     }
 
