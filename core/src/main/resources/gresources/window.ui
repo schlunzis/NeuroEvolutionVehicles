@@ -24,20 +24,13 @@
                 <property name="content">
                     <object class="GtkPaned">
                         <property name="orientation">horizontal</property>
+                        <property name="min-position">200</property>
                         <child>
-                            <object class="GtkOverlay">
+                            <object class="org_schlunzis_neuroevolution_view_simulation_SimulationView"
+                                    id="simulationView">
                                 <property name="hexpand">true</property>
                                 <property name="vexpand">true</property>
                                 <property name="width-request">400</property>
-                                <child>
-                                    <object class="org_schlunzis_neuroevolution_view_track_TrackView" id="trackView">
-                                    </object>
-                                </child>
-                                <child type="overlay">
-                                    <object class="org_schlunzis_neuroevolution_view_track_VehiclesView"
-                                            id="vehiclesView">
-                                    </object>
-                                </child>
                             </object>
                         </child>
                         <child>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="org_schlunzis_neuroevolution_view_simulation_SimulationView" parent="GtkBox">
+        <property name="hexpand">true</property>
+        <property name="vexpand">true</property>
+        <property name="width-request">400</property>
+        <child>
+            <object class="GtkOverlay" id="overlay">
+                <property name="hexpand">true</property>
+                <property name="vexpand">true</property>
+                <property name="width-request">400</property>
+                <child>
+                    <object class="org_schlunzis_neuroevolution_view_simulation_TrackView" id="trackView">
+                        <property name="hexpand">true</property>
+                        <property name="vexpand">true</property>
+                        <property name="width-request">400</property>
+                    </object>
+                </child>
+                <child type="overlay">
+                    <object class="org_schlunzis_neuroevolution_view_simulation_VehiclesView" id="vehiclesView">
+                        <property name="hexpand">true</property>
+                        <property name="vexpand">true</property>
+                        <property name="width-request">400</property>
+                    </object>
+                </child>
+            </object>
+        </child>
+    </template>
+</interface>

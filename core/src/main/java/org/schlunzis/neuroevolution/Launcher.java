@@ -3,17 +3,22 @@ package org.schlunzis.neuroevolution;
 import org.gnome.gio.Resource;
 import org.javagi.base.GErrorException;
 import org.javagi.gobject.types.Types;
+import org.javagi.gtk.types.TemplateTypes;
 import org.schlunzis.neuroevolution.view.App;
-import org.schlunzis.neuroevolution.view.track.TrackView;
-import org.schlunzis.neuroevolution.view.track.VehicleView;
-import org.schlunzis.neuroevolution.view.track.VehiclesView;
+import org.schlunzis.neuroevolution.view.simulation.SimulationView;
+import org.schlunzis.neuroevolution.view.simulation.TrackView;
+import org.schlunzis.neuroevolution.view.simulation.VehicleView;
+import org.schlunzis.neuroevolution.view.simulation.VehiclesView;
 
 public class Launcher {
 
     static {
+        TemplateTypes.register(SimulationView.class);
+
         Types.register(TrackView.class);
         Types.register(VehiclesView.class);
         Types.register(VehicleView.class);
+        Types.register(SimulationView.class);
     }
 
     static void main(String[] args) throws GErrorException {
