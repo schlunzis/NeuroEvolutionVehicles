@@ -3,9 +3,8 @@ package org.schlunzis.neuroevolution.model;
 import lombok.Getter;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.neuroevolution.model.track.TrackFactory;
 import org.schlunzis.neuroevolution.sdk.track.Track;
-import org.schlunzis.neuroevolution.sdk.util.PVector;
+import org.schlunzis.neuroevolution.sdk.util.SVector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +43,8 @@ public class GeneticAlgorithm {
         reset();
     }
 
-    public GeneticAlgorithm() {
-        synchronized (trackLock) {
-            this.track = TrackFactory.createTrack(TrackFactory.CONVEX_HULL);
-        }
-        reset();
+    public GeneticAlgorithm(Track track) {
+        this.setTrack(track);
     }
 
     public void reset() {
@@ -67,7 +63,7 @@ public class GeneticAlgorithm {
     }
 
     @Synchronized("trackLock")
-    private PVector getStartVelocity() {
+    private SVector getStartVelocity() {
         return track.getStartVelocity();
     }
 

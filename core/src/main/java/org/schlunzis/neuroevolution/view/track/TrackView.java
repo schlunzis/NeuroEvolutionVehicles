@@ -8,7 +8,7 @@ import org.javagi.gobject.annotations.InstanceInit;
 import org.schlunzis.neuroevolution.model.World;
 import org.schlunzis.neuroevolution.sdk.track.Track;
 import org.schlunzis.neuroevolution.sdk.util.Boundary;
-import org.schlunzis.neuroevolution.sdk.util.PVector;
+import org.schlunzis.neuroevolution.sdk.util.SVector;
 
 import java.lang.foreign.MemorySegment;
 
@@ -50,10 +50,10 @@ public class TrackView extends DrawingArea {
     }
 
     private void drawBoundary(Context cr, Boundary boundary, int width, int height) {
-        PVector a = boundary.getA();
-        PVector b = boundary.getB();
-        cr.moveTo(a.x * width, a.y * height);
-        cr.lineTo(b.x * width, b.y * height);
+        SVector a = boundary.getA();
+        SVector b = boundary.getB();
+        cr.moveTo(a.x() * width, a.y() * height);
+        cr.lineTo(b.x() * width, b.y() * height);
         cr.stroke();
     }
 }
