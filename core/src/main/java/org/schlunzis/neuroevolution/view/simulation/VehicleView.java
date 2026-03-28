@@ -14,15 +14,16 @@ import org.schlunzis.neuroevolution.model.Vehicle;
 
 public class VehicleView extends DrawingArea {
 
+    private static Texture carTexture;
+
     @Getter
     private final Vehicle vehicle;
     private double angleDeg;
+    private boolean highlight = false;
 
     public VehicleView(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
-
-    private static Texture carTexture;
 
     static {
         carTexture = Texture.fromResource("/icons/scalable/actions/car-top-view.svg");
@@ -34,16 +35,25 @@ public class VehicleView extends DrawingArea {
         GestureClick gesture = new GestureClick();
         gesture.onPressed((_, _, _) -> {
             System.out.println(vehicle.getId());
+            highlight = true;
         });
+        // FIXME: GestureClick does not rotate as the view does -> Hitbox is not aligned with the image.
         this.addController(gesture);
     }
 
     private void draw(DrawingArea drawingArea, Context cr, int width, int height) {
-        cr.setSourceRGB(1, 0, 0);
-        cr.rectangle(0, 0, height * 2, width * 2);
+        if (highlight) {
+            cr.setSourceRGB(1, 1, 0);
+        } else {
+            cr.setSourceRGB(1, 0, 0);
+        }
+        cr.rectangle(0, 0, width, height);
         cr.stroke();
     }
 
+    public boolean isFinished() {
+        return false; // vehicle.isDead();
+    }
 
     public void setDirection(double angleDeg) {
         this.angleDeg = angleDeg;
@@ -57,8 +67,8 @@ public class VehicleView extends DrawingArea {
         int h = this.getHeight();
 
         snapshot.translate(new Point(w / 2f, h / 2f));
-        snapshot.rotate((float) angleDeg + 90); // +90 because the car texture is oriented upwards
-        snapshot.appendTexture(carTexture, new Rect(new Point(-h, 0), new Size(2 * h, 2 * w)));
+        snapshot.rotate((float) angleDeg + 90);
+        snapshot.appendTexture(carTexture, new Rect(new Point(-w / 2f, -h / 2f), new Size(w, h)));
         snapshot.translate(new Point(-w / 2f, -h / 2f));
 
         // draw content (image / child / custom rendering)
