@@ -3,6 +3,7 @@
     <gresource prefix="/org/schlunzis/neuroevolution">
         <file preprocess="xml-stripblanks">window.ui</file>
         <file preprocess="xml-stripblanks">gears-menu.ui</file>
+        <file preprocess="xml-stripblanks">simulation-view.ui</file>
     </gresource>
     <gresource prefix="/icons/scalable/actions">
         <file alias="car-top-view.svg" preprocess="xml-stripblanks">car-top-view.svg</file>

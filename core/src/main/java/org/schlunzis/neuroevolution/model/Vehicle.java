@@ -2,8 +2,9 @@ package org.schlunzis.neuroevolution.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.neuroevolution.sdk.util.Boundary;
-import org.schlunzis.neuroevolution.sdk.util.PVector;
+import org.schlunzis.neuroevolution.sdk.util.SVector;
 import org.schlunzis.zis.ai.nn.GeneticNeuralNetwork;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+@Slf4j
 @Getter
 public class Vehicle {
 
@@ -30,10 +32,10 @@ public class Vehicle {
     private int lifespan = 35;
     private int lifeCounter;
 
-    private PVector pos;
-    private PVector vel;
-    private PVector acc;
-    private PVector startVel;
+    private SVector pos;
+    private SVector vel;
+    private SVector acc;
+    private SVector startVel;
 
     private int checkPointFitness;
     private int lapFitness;
@@ -58,7 +60,7 @@ public class Vehicle {
      * @param nn
      * @param mutationRate
      */
-    public Vehicle(PVector start, PVector startVel, GeneticNeuralNetwork nn, double mutationRate) {
+    public Vehicle(SVector start, SVector startVel, GeneticNeuralNetwork nn, double mutationRate) {
         id = UUID.randomUUID();
         random = new Random();
         checkPointFitness = 0;
@@ -67,18 +69,18 @@ public class Vehicle {
         lifeCounter = 0;
         dead = false;
         checkpointIndex = 0;
-        pos = start.copy();
+        pos = new SVector(start);
 
         double d2 = 1 / 400d;
         if (startVel == null) {
             double x = random.nextDouble(-d2, d2);
             double y = random.nextDouble(-d2, d2);
-            vel = new PVector(x, y);
+            vel = new SVector(x, y);
         } else
-            vel = startVel.copy().normalize().mult(1 / 400d);
+            vel = startVel.normalized().mult(1 / 400d);
 
-        this.startVel = vel.copy();
-        acc = new PVector();
+        this.startVel = new SVector(vel);
+        acc = new SVector();
         rays = new ArrayList<>();
         for (int a = -45; a <= 45; a += 15) {
             rays.add(new Ray(pos, Math.toRadians(a)));
@@ -90,7 +92,7 @@ public class Vehicle {
             brain = new GeneticNeuralNetwork(0, mutationRate, rays.size(), 2, rays.size() * 2);
     }
 
-    public Vehicle(PVector start, double mutationRate) {
+    public Vehicle(SVector start, double mutationRate) {
         this(start, null, null, mutationRate);
     }
 
@@ -98,12 +100,12 @@ public class Vehicle {
         brain.mutate();
     }
 
-    public PVector getStartVelocity() {
-        return this.startVel.copy();
+    public SVector getStartVelocity() {
+        return new SVector(startVel);
     }
 
-    public void setStartVelocity(PVector vel) {
-        this.startVel = vel.copy();
+    public void setStartVelocity(SVector vel) {
+        this.startVel = new SVector(vel);
     }
 
     public GeneticNeuralNetwork getBrain() {
@@ -114,8 +116,8 @@ public class Vehicle {
         brain = nn;
     }
 
-    public void applyForce(PVector force) {
-        acc.add(force);
+    public void applyForce(SVector force) {
+        acc = acc.add(force);
     }
 
     public void look(List<Boundary> walls) {
@@ -124,9 +126,9 @@ public class Vehicle {
             Ray ray = rays.get(i);
             double rec = sight;
             for (Boundary wall : walls) {
-                PVector pt = ray.cast(wall);
+                SVector pt = ray.cast(wall);
                 if (pt != null) {
-                    double d = PVector.dist(pos, pt);
+                    double d = pos.dist(pt);
                     if (d < rec)
                         rec = d;
                 }
@@ -140,34 +142,34 @@ public class Vehicle {
         double[][] output = brain.query(inputs).toArray();
         double angle = map(output[0][0], 0, 1, -Math.PI, Math.PI);
         double speed = map(output[1][0], 0, 1, 0, maxSpeed);
-        angle += vel.heading();
-        PVector steering = PVector.fromAngle(angle);
-        steering.setMag(speed);
-        steering.sub(vel);
-        steering.limit(maxForce);
+        angle += vel.rawAngle();
+        SVector steering = SVector.fromAngle(angle)
+                .withMag(speed)
+                .sub(vel)
+                .withLimit(maxForce);
         applyForce(steering);
     }
 
     public void update() {
         if (!dead) {
-            pos.add(vel);
-            vel.add(acc);
-            vel.limit(maxSpeed);
-            acc.mult(0);
+            pos = pos.add(vel);
+            vel = vel.add(acc)
+                    .withLimit(maxSpeed);
+            acc = acc.mult(0);
             lifeCounter++;
             if (lifeCounter > lifespan) {
                 dead = true;
             }
             rays = new ArrayList<>();
             for (int a = -45; a <= 45; a += 15) {
-                rays.add(new Ray(this.pos, Math.toRadians(a) + this.vel.heading()));
+                rays.add(new Ray(this.pos, Math.toRadians(a) + this.vel.rawAngle()));
             }
         }
     }
 
     public void check(List<Boundary> checkpoints) {
         Boundary goal = checkpoints.get(checkpointIndex);
-        double d = pldistance(goal.getA(), goal.getB(), pos.x, pos.y);
+        double d = pldistance(goal.getA(), goal.getB(), pos.x(), pos.y());
         if (d < crashDistance) {
             checkpointIndex = ++checkpointIndex % checkpoints.size();
             if (checkpointIndex == 0) {
@@ -186,9 +188,9 @@ public class Vehicle {
         fitness = Math.pow(2, checkPointFitness);
     }
 
-    private double pldistance(PVector p1, PVector p2, double x, double y) {
-        double num = Math.abs((p2.y - p1.y) * x - (p2.x - p1.x) * y + p2.x * p1.y - p2.y * p1.x);
-        double den = PVector.dist(p1, p2);
+    private double pldistance(SVector p1, SVector p2, double x, double y) {
+        double num = Math.abs((p2.y() - p1.y()) * x - (p2.x() - p1.x()) * y + p2.x() * p1.y() - p2.y() * p1.x());
+        double den = p1.dist(p2);
         return num / den;
     }
 

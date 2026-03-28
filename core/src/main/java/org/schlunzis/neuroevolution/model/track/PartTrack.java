@@ -1,10 +1,9 @@
 package org.schlunzis.neuroevolution.model.track;
 
+import lombok.Getter;
 import org.schlunzis.neuroevolution.sdk.track.Track;
 import org.schlunzis.neuroevolution.sdk.util.Boundary;
-import org.schlunzis.neuroevolution.sdk.util.PVector;
-
-import lombok.Getter;
+import org.schlunzis.neuroevolution.sdk.util.SVector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,10 +15,10 @@ import java.util.Random;
  */
 public class PartTrack implements Track {
 
-    private static final PVector VECTOR_TOP_LEFT = new PVector(0, 0);
-    private static final PVector VECTOR_TOP_RIGHT = new PVector(1, 0);
-    private static final PVector VECTOR_BOTTOM_LEFT = new PVector(0, 1);
-    private static final PVector VECTOR_BOTTOM_RIGHT = new PVector(1, 1);
+    private static final SVector VECTOR_TOP_LEFT = new SVector(0, 0);
+    private static final SVector VECTOR_TOP_RIGHT = new SVector(1, 0);
+    private static final SVector VECTOR_BOTTOM_LEFT = new SVector(0, 1);
+    private static final SVector VECTOR_BOTTOM_RIGHT = new SVector(1, 1);
 
     private static final Boundary BOUNDARY_TOP = new Boundary(VECTOR_TOP_LEFT, VECTOR_TOP_RIGHT);
     private static final Boundary BOUNDARY_LEFT = new Boundary(VECTOR_TOP_LEFT, VECTOR_BOTTOM_LEFT);
@@ -28,12 +27,12 @@ public class PartTrack implements Track {
     private static final Boundary BOUNDARY_TOP_LEFT_BOTTOM_RIGHT = new Boundary(VECTOR_TOP_LEFT, VECTOR_BOTTOM_RIGHT);
     private static final Boundary BOUNDARY_TOP_RIGHT_BOTTOM_LEFT = new Boundary(VECTOR_TOP_RIGHT, VECTOR_BOTTOM_LEFT);
 
-    private static final Boundary CHECKPOINT_VERTICAL = new Boundary(new PVector(0.5, 0), new PVector(0.5, 1));
-    private static final Boundary CHECKPOINT_HORIZONTAL = new Boundary(new PVector(0, 0.5), new PVector(1, 0.5));
-    private static final Boundary CHECKPOINT_TOP_LEFT = new Boundary(new PVector(0.5, 0.5), new PVector(0, 0));
-    private static final Boundary CHECKPOINT_TOP_RIGHT = new Boundary(new PVector(0.5, 0.5), new PVector(1, 0));
-    private static final Boundary CHECKPOINT_BOTTOM_LEFT = new Boundary(new PVector(0.5, 0.5), new PVector(0, 1));
-    private static final Boundary CHECKPOINT_BOTTOM_RIGHT = new Boundary(new PVector(0.5, 0.5), new PVector(1, 1));
+    private static final Boundary CHECKPOINT_VERTICAL = new Boundary(new SVector(0.5, 0), new SVector(0.5, 1));
+    private static final Boundary CHECKPOINT_HORIZONTAL = new Boundary(new SVector(0, 0.5), new SVector(1, 0.5));
+    private static final Boundary CHECKPOINT_TOP_LEFT = new Boundary(new SVector(0.5, 0.5), new SVector(0, 0));
+    private static final Boundary CHECKPOINT_TOP_RIGHT = new Boundary(new SVector(0.5, 0.5), new SVector(1, 0));
+    private static final Boundary CHECKPOINT_BOTTOM_LEFT = new Boundary(new SVector(0.5, 0.5), new SVector(0, 1));
+    private static final Boundary CHECKPOINT_BOTTOM_RIGHT = new Boundary(new SVector(0.5, 0.5), new SVector(1, 1));
 
 
     private static final int ROWS = 10;
@@ -43,14 +42,14 @@ public class PartTrack implements Track {
     private PART[][] track;
 
     @Getter
-    private PVector start;
+    private SVector start;
 
     @Getter
     private List<Boundary> walls;
     @Getter
     private List<Boundary> checkpoints;
 
-    public String getTrackName(){
+    public String getTrackName() {
         return "PartTrack";
     }
 
@@ -194,25 +193,24 @@ public class PartTrack implements Track {
         List<Boundary> boundaries = track[row][col].getBoundaries();
         for (Boundary boundary : boundaries) {
             walls.add(new Boundary(
-                    (boundary.getA().x * partSize) + rowOffset, (boundary.getA().y * partSize) + colOffset,
-                    (boundary.getB().x * partSize) + rowOffset, (boundary.getB().y * partSize) + colOffset
+                    (boundary.getA().x() * partSize) + rowOffset, (boundary.getA().y() * partSize) + colOffset,
+                    (boundary.getB().x() * partSize) + rowOffset, (boundary.getB().y() * partSize) + colOffset
             ));
         }
 
         checkpoints.add(new Boundary(
-                (track[row][col].getCheckpoint().getA().x * partSize) + rowOffset, (track[row][col].getCheckpoint().getA().y * partSize) + colOffset,
-                (track[row][col].getCheckpoint().getB().x * partSize) + rowOffset, (track[row][col].getCheckpoint().getB().y * partSize) + colOffset
+                (track[row][col].getCheckpoint().getA().x() * partSize) + rowOffset, (track[row][col].getCheckpoint().getA().y() * partSize) + colOffset,
+                (track[row][col].getCheckpoint().getB().x() * partSize) + rowOffset, (track[row][col].getCheckpoint().getB().y() * partSize) + colOffset
         ));
 
     }
 
     @Override
-    public PVector getStartVelocity() {
-        Boundary boundary = checkpoints.get(0);
-        PVector v = PVector.sub(boundary.getA(), boundary.getB());
-        v.rotate(-Math.PI * 0.5);
-        v.normalize();
-        return v;
+    public SVector getStartVelocity() {
+        Boundary boundary = checkpoints.getFirst();
+        return SVector.sub(boundary.getA(), boundary.getB())
+                .rotate(-Math.PI * 0.5)
+                .normalized();
     }
 
     public enum DIRECTION {
@@ -285,7 +283,7 @@ public class PartTrack implements Track {
             List<Boundary> bounds = Arrays.stream(boundaries).toList();
             for (int i = 0; i < bounds.size() - 1; i++) this.boundaries.add(bounds.get(i));
 
-            this.checkpoint = bounds.get(bounds.size() - 1);
+            this.checkpoint = bounds.getLast();
         }
 
         public DIRECTION getTurn() {

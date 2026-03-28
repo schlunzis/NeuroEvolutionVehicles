@@ -7,12 +7,12 @@ import org.schlunzis.neuroevolution.sdk.track.Track;
 @Getter
 public class World {
 
-    private final Track track = TrackFactory.createTrack(TrackFactory.PART_TRACK);
-    private final GeneticAlgorithm ga = new GeneticAlgorithm();
+    private final Track track = TrackFactory.createTrack(TrackFactory.CONVEX_HULL);
+    private final GeneticAlgorithm ga;
 
     public World() {
         track.buildTrack();
-        ga.setTrack(track);
+        ga = new GeneticAlgorithm(track);
     }
 
     public void update() {

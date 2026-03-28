@@ -1,4 +1,4 @@
-package org.schlunzis.neuroevolution.view.track;
+package org.schlunzis.neuroevolution.view.simulation;
 
 import lombok.Getter;
 import org.freedesktop.cairo.Context;

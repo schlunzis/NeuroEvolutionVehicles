@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="org_schlunzis_neuroevolution_view_simulation_SimulationView" parent="GtkBox">
+        <property name="layout-manager">
+            <object class="GtkConstraintLayout">
+                <constraints>
+                    <constraint target="overlay" target-attribute="width"
+                                relation="eq"
+                                source="overlay" source-attribute="height"
+                                strength="required"/>
+
+                    <constraint target="overlay" target-attribute="center-x"
+                                relation="eq"
+                                source="super" source-attribute="center-x"
+                                strength="required"/>
+                    <constraint target="overlay" target-attribute="center-y"
+                                relation="eq"
+                                source="super" source-attribute="center-y"
+                                strength="required"/>
+
+                    <constraint target="overlay" target-attribute="width"
+                                relation="le"
+                                source="super" source-attribute="width"
+                                strength="required"/>
+                    <constraint target="overlay" target-attribute="height"
+                                relation="le"
+                                source="super" source-attribute="height"
+                                strength="required"/>
+                </constraints>
+            </object>
+        </property>
+        <child>
+            <object class="GtkOverlay" id="overlay">
+                <child>
+                    <object class="org_schlunzis_neuroevolution_view_simulation_TrackView" id="trackView"/>
+                </child>
+                <child type="overlay">
+                    <object class="org_schlunzis_neuroevolution_view_simulation_VehiclesView" id="vehiclesView"/>
+                </child>
+            </object>
+        </child>
+    </template>
+</interface>
