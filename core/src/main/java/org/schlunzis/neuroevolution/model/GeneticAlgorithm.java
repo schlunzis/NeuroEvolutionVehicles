@@ -33,7 +33,7 @@ public class GeneticAlgorithm {
 
     private List<Runnable> newGenerationHooks = new ArrayList<>();
 
-    public void addNewGenerationHoook(Runnable r) {
+    public void addNewGenerationHook(Runnable r) {
         newGenerationHooks.add(r);
     }
 

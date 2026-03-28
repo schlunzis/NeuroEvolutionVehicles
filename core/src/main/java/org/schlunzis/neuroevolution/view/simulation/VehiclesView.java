@@ -23,25 +23,32 @@ public class VehiclesView extends Fixed {
 
     public void setWorld(World world) {
         this.world = world;
-        world.getGa().addNewGenerationHoook(this::reset);
+        world.getGa().addNewGenerationHook(this::reset);
         reset();
     }
 
     public void update() {
         int fixedWidth = this.getWidth();
         int fixedHeight = this.getHeight();
-        for (VehicleView view : views) {
+        for (int i = views.size() - 1; i >= 0; i--) {
+            VehicleView view = views.get(i);
+            if (view.isFinished()) {
+                remove(view);
+                views.remove(view);
+                continue;
+            }
             Vehicle vehicle = view.getVehicle();
             SVector pos = vehicle.getPos();
-            double width = vehicle.getVechileWidth() * fixedWidth;
+            double width = vehicle.getVehicleWidth() * fixedWidth;
             double height = vehicle.getVehicleHeight() * fixedHeight;
             double posX = (pos.x() * fixedWidth) - width / 2;
             double posY = (pos.y() * fixedHeight) - height / 2;
 
-            view.setDirection(Math.toDegrees(vehicle.getVel().rawAngle()));
-            this.move(view, posX, posY);
             view.setContentWidth((int) width);
             view.setContentHeight((int) height);
+
+            this.move(view, posX, posY);
+            view.setDirection(Math.toDegrees(vehicle.getVel().rawAngle()));
         }
     }
 
