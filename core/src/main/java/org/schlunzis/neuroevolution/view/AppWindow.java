@@ -2,7 +2,6 @@ package org.schlunzis.neuroevolution.view;
 
 import org.gnome.adw.ApplicationWindow;
 import org.gnome.gio.MenuModel;
-import org.gnome.gtk.Button;
 import org.gnome.gtk.GtkBuilder;
 import org.gnome.gtk.MenuButton;
 import org.javagi.gobject.annotations.InstanceInit;
@@ -11,6 +10,7 @@ import org.javagi.gtk.annotations.GtkTemplate;
 import org.schlunzis.neuroevolution.model.World;
 import org.schlunzis.neuroevolution.simulation.SimulationController;
 import org.schlunzis.neuroevolution.view.simulation.SimulationView;
+import org.schlunzis.neuroevolution.view.tabs.SimulationTab;
 
 @GtkTemplate(ui = "/org/schlunzis/neuroevolution/window.ui")
 public class AppWindow extends ApplicationWindow {
@@ -22,7 +22,7 @@ public class AppWindow extends ApplicationWindow {
     public SimulationView simulationView;
 
     @GtkChild
-    public Button toggleButton;
+    public SimulationTab simulationTab;
 
     private SimulationController controller;
 
@@ -35,16 +35,16 @@ public class AppWindow extends ApplicationWindow {
         try {
             World world = new World();
             simulationView.setWorld(world);
-            controller = new SimulationController(world, () -> simulationView.update());
+            controller = new SimulationController(world, () -> {
+                simulationView.update();
+                simulationTab.update();
+            });
+            simulationTab.setController(controller);
 
             GtkBuilder builder = GtkBuilder.fromResource("/org/schlunzis/neuroevolution/gears-menu.ui");
             MenuModel menu = (MenuModel) builder.getObject("menu");
             gears.setMenuModel(menu);
             controller.start();
-
-            toggleButton.onClicked(() ->
-                    controller.toggle()
-            );
         } catch (Exception e) {
             e.printStackTrace();
         }

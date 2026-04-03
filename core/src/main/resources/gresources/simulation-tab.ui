@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="org_schlunzis_neuroevolution_view_tabs_SimulationTab" parent="GtkBox">
+        <child>
+            <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                    <object class="GtkButton" id="toggleRunningButton">
+                        <signal name="clicked" handler="toggleRunningButtonPressed"/>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkListBox">
+                        <child>
+                            <object class="AdwSwitchRow">
+                                <property name="title" translatable="yes">Switch Row</property>
+                            </object>
+                        </child>
+                    </object>
+                </child>
+            </object>
+        </child>
+    </template>
+</interface>
