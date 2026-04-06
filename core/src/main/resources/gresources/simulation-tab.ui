@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
     <template class="org_schlunzis_neuroevolution_view_tabs_SimulationTab" parent="GtkBox">
+        <property name="width-request">300</property>
         <child>
-            <object class="GtkBox">
-                <property name="orientation">vertical</property>
+            <object class="AdwClamp">
                 <child>
-                    <object class="GtkButton" id="toggleRunningButton">
-                        <signal name="clicked" handler="toggleRunningButtonPressed"/>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkListBox">
+                    <object class="GtkBox">
+                        <property name="orientation">vertical</property>
                         <child>
-                            <object class="AdwSwitchRow">
-                                <property name="title" translatable="yes">Switch Row</property>
+                            <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="homogeneous">true</property>
+                                <property name="spacing">8</property>
+                                <property name="baseline-position">center</property>
+                                <child>
+                                    <object class="GtkButton" id="toggleRunningButton">
+                                        <property name="icon-name">play-symbolic</property>
+                                        <signal name="clicked" handler="toggleRunningButtonPressed"/>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkButton" id="nextGenerationButton">
+                                        <property name="icon-name">skip-forward-large-symbolic</property>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkListBox">
+                                <child>
+                                    <object class="AdwSwitchRow">
+                                        <property name="title" translatable="yes">Switch Row</property>
+                                    </object>
+                                </child>
                             </object>
                         </child>
                     </object>

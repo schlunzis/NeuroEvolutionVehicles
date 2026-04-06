@@ -4,9 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.freedesktop.cairo.Cairo;
 import org.gnome.adw.AboutDialog;
 import org.gnome.adw.Application;
+import org.gnome.gdk.Display;
 import org.gnome.gio.ApplicationFlags;
 import org.gnome.gio.SimpleAction;
 import org.gnome.glib.Variant;
+import org.gnome.gtk.IconTheme;
 
 @Slf4j
 public class App extends Application {
@@ -18,6 +20,8 @@ public class App extends Application {
         } catch (Throwable t) {
             t.printStackTrace();
         }
+        IconTheme theme = IconTheme.getForDisplay(Display.getDefault());
+        theme.addResourcePath("/org/schlunzis/neuroevolution/icons");
         AppWindow win = new AppWindow(this);
         win.present();
     }

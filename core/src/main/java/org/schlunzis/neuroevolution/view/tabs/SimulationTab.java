@@ -32,7 +32,8 @@ public class SimulationTab extends Box {
 
     private void updateToggleRunningButton() {
         boolean running = controller.isRunning();
-        
+        String iconName = running ? "pause-symbolic" : "play-symbolic";
+        toggleRunningButton.setIconName(iconName);
     }
 
     @GtkCallback
