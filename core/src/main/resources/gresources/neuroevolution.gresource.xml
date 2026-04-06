@@ -6,9 +6,11 @@
         <file preprocess="xml-stripblanks">simulation-view.ui</file>
         <file preprocess="xml-stripblanks">simulation-tab.ui</file>
     </gresource>
+    <gresource prefix="/org/schlunzis/neuroevolution/images">
+        <file preprocess="xml-stripblanks">car-top-view.svg</file>
+    </gresource>
     <!-- @formatter:off -->
     <gresource prefix="/org/schlunzis/neuroevolution/icons/scalable/actions">
-        <file alias="car-top-view.svg" preprocess="xml-stripblanks">car-top-view.svg</file>
         <file preprocess="xml-stripblanks" alias="pause-symbolic.svg">icons/pause-symbolic.svg</file>
         <file preprocess="xml-stripblanks" alias="play-symbolic.svg">icons/play-symbolic.svg</file>
         <file preprocess="xml-stripblanks" alias="skip-forward-large-symbolic.svg">icons/skip-forward-large-symbolic.svg</file>
