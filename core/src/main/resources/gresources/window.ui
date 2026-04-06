@@ -47,16 +47,10 @@
 
                                         <child>
                                             <object class="AdwTabPage">
-                                                <property name="title">tab1</property>
+                                                <property name="title">Simulation</property>
                                                 <property name="child">
-                                                    <object class="GtkButton" id="toggleButton">
-                                                        <property name="child">
-                                                            <object class="AdwButtonContent">
-                                                                <property name="label" translatable="yes">_Toggle
-                                                                </property>
-                                                                <property name="use-underline">True</property>
-                                                            </object>
-                                                        </property>
+                                                    <object class="org_schlunzis_neuroevolution_view_tabs_SimulationTab"
+                                                            id="simulationTab">
                                                     </object>
                                                 </property>
                                             </object>

@@ -9,11 +9,13 @@ import org.schlunzis.neuroevolution.view.simulation.SimulationView;
 import org.schlunzis.neuroevolution.view.simulation.TrackView;
 import org.schlunzis.neuroevolution.view.simulation.VehicleView;
 import org.schlunzis.neuroevolution.view.simulation.VehiclesView;
+import org.schlunzis.neuroevolution.view.tabs.SimulationTab;
 
 public class Launcher {
 
     static {
         TemplateTypes.register(SimulationView.class);
+        TemplateTypes.register(SimulationTab.class);
 
         Types.register(TrackView.class);
         Types.register(VehiclesView.class);

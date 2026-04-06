@@ -10,6 +10,8 @@ public class SimulationController {
     @Getter
     private final World world;
     private final Runnable redrawCallback;
+
+    @Getter
     private boolean running = true;
 
     public void start() {
@@ -25,6 +27,5 @@ public class SimulationController {
     public void toggle() {
         running = !running;
     }
-
 
 }

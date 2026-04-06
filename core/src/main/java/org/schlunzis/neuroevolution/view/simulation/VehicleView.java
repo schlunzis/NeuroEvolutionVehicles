@@ -26,7 +26,7 @@ public class VehicleView extends DrawingArea {
     }
 
     static {
-        carTexture = Texture.fromResource("/icons/scalable/actions/car-top-view.svg");
+        carTexture = Texture.fromResource("/org/schlunzis/neuroevolution/images/car-top-view.svg");
     }
 
     @InstanceInit
