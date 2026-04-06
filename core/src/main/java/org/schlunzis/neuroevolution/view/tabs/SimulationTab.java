@@ -42,4 +42,9 @@ public class SimulationTab extends Box {
         updateToggleRunningButton();
     }
 
+    @GtkCallback
+    public void nextGenerationButtonPressed() {
+        this.controller.getWorld().getGa().triggerNextGeneration();
+    }
+
 }

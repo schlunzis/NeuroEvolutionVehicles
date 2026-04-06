@@ -94,17 +94,21 @@ public class GeneticAlgorithm {
                 }
 
                 if (population.isEmpty()) {
-                    track.buildTrack();
-                    nextGeneration();
-                    generationCount++;
-                    for (Runnable r : newGenerationHooks)
-                        r.run();
-
-                    log.debug("Generation #{}", generationCount);
+                    triggerNextGeneration();
                 }
 
             }
         }
+    }
+
+    public void triggerNextGeneration() {
+        track.buildTrack();
+        nextGeneration();
+        generationCount++;
+        for (Runnable r : newGenerationHooks)
+            r.run();
+
+        log.debug("Generation #{}", generationCount);
     }
 
     private void nextGeneration() {

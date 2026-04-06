@@ -31,6 +31,7 @@
                                         <child>
                                             <object class="GtkButton" id="nextGenerationButton">
                                                 <property name="icon-name">skip-forward-large-symbolic</property>
+                                                <signal name="clicked" handler="nextGenerationButtonPressed"/>
                                             </object>
                                         </child>
                                     </object>
