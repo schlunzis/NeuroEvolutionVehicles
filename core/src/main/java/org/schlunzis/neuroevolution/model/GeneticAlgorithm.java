@@ -57,7 +57,7 @@ public class GeneticAlgorithm {
             track.buildTrack();
 
             for (int i = 0; i < populationSize; i++) {
-                population.add(new Vehicle(track.getStart(), getStartVelocity(), null, mutationRate));
+                population.add(new Vehicle(track.getStart(), getStartVelocity(), null));
             }
         }
     }
@@ -131,7 +131,7 @@ public class GeneticAlgorithm {
                 best = v;
             }
         }
-        Vehicle v = new Vehicle(track.getStart(), getStartVelocity(), best.getBrain(), mutationRate);
+        Vehicle v = new Vehicle(track.getStart(), getStartVelocity(), best.getGenotype().copy());
         v.setId(best.getId());
         return v;
     }
@@ -145,9 +145,9 @@ public class GeneticAlgorithm {
         }
         index--;
         Vehicle v = savedVehicles.get(index);
-        Vehicle child = new Vehicle(track.getStart(), getStartVelocity(), v.getBrain(), mutationRate);
+        Vehicle child = new Vehicle(track.getStart(), getStartVelocity(), v.getGenotype().copy());
 
-        child.mutate();
+        child = child.mutate();
         return child;
     }
 

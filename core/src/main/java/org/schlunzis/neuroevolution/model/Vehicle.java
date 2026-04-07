@@ -5,12 +5,14 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.neuroevolution.sdk.util.Boundary;
 import org.schlunzis.neuroevolution.sdk.util.SVector;
-import org.schlunzis.zis.ai.nn.GeneticNeuralNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import static org.schlunzis.neuroevolution.sdk.Constants.MAX_SPEED;
+import static org.schlunzis.neuroevolution.sdk.util.MathUtils.map;
 
 @Slf4j
 @Getter
@@ -19,7 +21,6 @@ public class Vehicle {
     @Setter
     private UUID id;
 
-    private double maxSpeed = 5 / 400d;
     private double maxForce = 0.2 / 400d;
 
     private double crashDistance = 5 / 400d;
@@ -49,19 +50,17 @@ public class Vehicle {
     private int lapCount;
     private int checkpointIndex;
 
-    private GeneticNeuralNetwork brain;
+    private final Genotype genotype;
 
-    private Random random;
+    private final Random random;
 
     /**
      *
      * @param start
-     * @param startVel     represents the initial facing. Should be perpendicular to
-     *                     the first checkpoint
-     * @param nn
-     * @param mutationRate
+     * @param startVel represents the initial facing. Should be perpendicular to
+     *                 the first checkpoint
      */
-    public Vehicle(SVector start, SVector startVel, GeneticNeuralNetwork nn, double mutationRate) {
+    public Vehicle(SVector start, SVector startVel, Genotype genotype) {
         id = UUID.randomUUID();
         random = new Random();
         checkPointFitness = 0;
@@ -87,18 +86,18 @@ public class Vehicle {
             rays.add(new Ray(pos, Math.toRadians(a)));
         }
 
-        if (nn != null) {
-            brain = nn.copy();
+        if (genotype != null) {
+            this.genotype = genotype.copy();
         } else
-            brain = new GeneticNeuralNetwork(0, mutationRate, rays.size(), 2, rays.size() * 2);
+            this.genotype = new Genotype(0.1, new Brain(rays.size())); // TODO get starting mutation rate from somewhere else
     }
 
-    public Vehicle(SVector start, double mutationRate) {
-        this(start, null, null, mutationRate);
+    public Vehicle(SVector start) {
+        this(start, null, null);
     }
 
-    public void mutate() {
-        brain.mutate();
+    public Vehicle mutate() {
+        return new Vehicle(pos, startVel, genotype.mutate());
     }
 
     public SVector getStartVelocity() {
@@ -109,20 +108,12 @@ public class Vehicle {
         this.startVel = new SVector(vel);
     }
 
-    public GeneticNeuralNetwork getBrain() {
-        return brain.copy();
-    }
-
-    public void setBrain(GeneticNeuralNetwork nn) {
-        brain = nn;
-    }
-
     public void applyForce(SVector force) {
         acc = acc.add(force);
     }
 
     public void look(List<Boundary> walls) {
-        double[][] inputs = new double[1][rays.size()];
+        double[] inputs = new double[rays.size()];
         for (int i = 0; i < rays.size(); i++) {
             Ray ray = rays.get(i);
             double rec = sight;
@@ -138,11 +129,11 @@ public class Vehicle {
                 dead = true;
                 return;
             }
-            inputs[0][i] = map(rec, 0, sight, 1, 0);
+            inputs[i] = map(rec, 0, sight, 1, 0);
         }
-        double[][] output = brain.query(inputs).toArray();
-        double angle = map(output[0][0], 0, 1, -Math.PI, Math.PI);
-        double speed = map(output[1][0], 0, 1, 0, maxSpeed);
+        Brain.Outputs output = genotype.brain().query(inputs, vel.mag());
+        double angle = output.desiredAngle();
+        double speed = output.desiredSpeed();
         angle += vel.rawAngle();
         SVector steering = SVector.fromAngle(angle)
                 .withMag(speed)
@@ -155,7 +146,7 @@ public class Vehicle {
         if (!dead) {
             pos = pos.add(vel);
             vel = vel.add(acc)
-                    .withLimit(maxSpeed);
+                    .withLimit(MAX_SPEED);
             acc = acc.mult(0);
             lifeCounter++;
             if (lifeCounter > lifespan) {
@@ -193,20 +184,6 @@ public class Vehicle {
         double num = Math.abs((p2.y() - p1.y()) * x - (p2.x() - p1.x()) * y + p2.x() * p1.y() - p2.y() * p1.x());
         double den = p1.dist(p2);
         return num / den;
-    }
-
-    /**
-     * Taken from Processing
-     *
-     * @param value
-     * @param inputMin
-     * @param inputMax
-     * @param outputMin
-     * @param outputMax
-     * @return
-     */
-    private double map(double value, double inputMin, double inputMax, double outputMin, double outputMax) {
-        return outputMin + (outputMax - outputMin) * ((value - inputMin) / (inputMax - inputMin));
     }
 
     @Override
