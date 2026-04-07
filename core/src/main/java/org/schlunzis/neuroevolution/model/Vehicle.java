@@ -21,7 +21,7 @@ public class Vehicle {
     @Setter
     private UUID id;
 
-    private double maxForce = 0.2 / 400d;
+    private double maxForce = 0.1 / 400d;
 
     private double crashDistance = 5 / 400d;
     private double scale = 10 / 800d;
@@ -178,12 +178,12 @@ public class Vehicle {
     }
 
     public void calculateFitness(List<Boundary> checkpoints) {
-        double newFitness = Math.pow(1.1, checkPointFitness);
-        newFitness += Math.pow(1.2, lapFitness);
+        double newFitness = lapFitness;
+        newFitness += (checkPointFitness % checkpoints.size()) / (double) checkpoints.size();
 
         Boundary goal = checkpoints.get(checkpointIndex);
         double d = pldistance(goal.getA(), goal.getB(), pos.x(), pos.y());
-        newFitness += map(d, 0, 1, 1.1, 0);
+        newFitness += map(d, 0, 1, 0.0001, 0);
 
         if (newFitness < fitness) {
             System.out.println("Are you dumb?");

@@ -103,6 +103,7 @@ public class GeneticAlgorithm {
 
     public void triggerNextGeneration() {
         track.buildTrack();
+        savedVehicles.addAll(population);
         nextGeneration();
         generationCount++;
         for (Runnable r : newGenerationHooks)
