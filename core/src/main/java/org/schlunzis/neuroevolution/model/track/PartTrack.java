@@ -38,7 +38,8 @@ public class PartTrack implements Track {
     private static final int ROWS = 10;
     private static final int COLUMNS = 10;
 
-    private final Random random;
+    private Random random;
+    private final int seed;
     private PART[][] track;
 
     @Getter
@@ -55,14 +56,17 @@ public class PartTrack implements Track {
 
     protected PartTrack() {
         random = new Random();
+        this.seed = random.nextInt();
     }
 
     protected PartTrack(int seed) {
+        this.seed = seed;
         random = new Random(seed);
     }
 
     @Override
     public void buildTrack() {
+        this.random = new Random(seed);
         walls = new ArrayList<>();
         checkpoints = new ArrayList<>();
         track = new PART[ROWS][COLUMNS];
@@ -82,7 +86,7 @@ public class PartTrack implements Track {
         track[ROWS - 1][COLUMNS - 1] = PART.TOP_LEFT;
         generateWallsAndCheckpoints(ROWS - 1, COLUMNS - 1);
 
-        start = checkpoints.get(0).midPoint();
+        start = checkpoints.getFirst().midPoint();
     }
 
     private void generateTrack() {

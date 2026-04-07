@@ -14,7 +14,7 @@ import java.util.List;
 public class GeneticAlgorithm {
 
     private double mutationRate = 0.05;
-    private int populationSize = 100;
+    private int populationSize = 500;
 
     private int cycles = 1;
 
@@ -115,7 +115,10 @@ public class GeneticAlgorithm {
         calculateFitness();
         population = new ArrayList<>();
         prevBest = findBestVehicle();
-        population.add(prevBest);
+        System.out.println("Best fitness: " + prevBest.getFitness());
+        System.out.println("Best proportional fitness: " + prevBest.getProportionalFitness());
+        System.out.println("Best mutationRate: " + prevBest.getGenotype().mutationRate());
+        population.add(prevBest.copyWithPos(track.getStart()));
         for (int i = 1; i < populationSize; i++) {
             population.add(pickOne());
         }
@@ -131,16 +134,14 @@ public class GeneticAlgorithm {
                 best = v;
             }
         }
-        Vehicle v = new Vehicle(track.getStart(), getStartVelocity(), best.getGenotype().copy());
-        v.setId(best.getId());
-        return v;
+        return best;
     }
 
     private Vehicle pickOne() {
         int index = 0;
         double r = Math.random();
         while (r > 0) {
-            r = r - savedVehicles.get(index).getFitness();
+            r = r - savedVehicles.get(index).getProportionalFitness();
             index++;
         }
         index--;
@@ -154,14 +155,14 @@ public class GeneticAlgorithm {
     @Synchronized
     private void calculateFitness() throws ArithmeticException {
         for (Vehicle v : savedVehicles)
-            v.calculateFitness();
+            v.calculateFitness(track.getCheckpoints());
         double sum = 0;
         for (Vehicle v : savedVehicles)
             sum += v.getFitness();
-        if (sum == 0)
+        if (sum <= 0)
             throw new ArithmeticException("Could not calculate fitness");
         for (Vehicle v : savedVehicles) {
-            v.setFitness(v.getFitness() / sum);
+            v.setProportionalFitness(v.getFitness() / sum);
         }
     }
 

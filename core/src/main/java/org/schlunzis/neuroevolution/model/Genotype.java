@@ -9,7 +9,7 @@ public record Genotype(
 
     public Genotype mutate() {
         double sigma = ThreadLocalRandom.current().nextGaussian();
-        double newMutationRate = mutationRate * sigma;
+        double newMutationRate = mutationRate + mutationRate * sigma;
         return new Genotype(newMutationRate, brain.mutate(mutationRate));
     }
 

@@ -41,8 +41,9 @@ public class Vehicle {
 
     private int checkPointFitness;
     private int lapFitness;
-    @Setter
     private double fitness;
+    @Setter
+    private double proportionalFitness;
     private boolean dead;
 
     private ArrayList<Ray> rays;
@@ -176,8 +177,18 @@ public class Vehicle {
         }
     }
 
-    public void calculateFitness() {
-        fitness = Math.pow(2, checkPointFitness);
+    public void calculateFitness(List<Boundary> checkpoints) {
+        double newFitness = Math.pow(1.1, checkPointFitness);
+        newFitness += Math.pow(1.2, lapFitness);
+
+        Boundary goal = checkpoints.get(checkpointIndex);
+        double d = pldistance(goal.getA(), goal.getB(), pos.x(), pos.y());
+        newFitness += map(d, 0, 1, 1.1, 0);
+
+        if (newFitness < fitness) {
+            System.out.println("Are you dumb?");
+        }
+        this.fitness = newFitness;
     }
 
     private double pldistance(SVector p1, SVector p2, double x, double y) {
@@ -189,5 +200,11 @@ public class Vehicle {
     @Override
     public boolean equals(Object obj) {
         return obj != null && obj instanceof Vehicle v && v.id.equals(id);
+    }
+
+    public Vehicle copyWithPos(SVector pos) {
+        Vehicle copy = new Vehicle(pos, startVel, genotype.copy());
+        copy.setId(id);
+        return copy;
     }
 }
