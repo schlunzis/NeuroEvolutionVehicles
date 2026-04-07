@@ -47,7 +47,7 @@ public class VehicleView extends DrawingArea {
         } else {
             cr.setSourceRGB(1, 0, 0);
         }
-        cr.rectangle(0, 0, width, height);
+//        cr.rectangle(0, 0, width, height);
         cr.stroke();
     }
 

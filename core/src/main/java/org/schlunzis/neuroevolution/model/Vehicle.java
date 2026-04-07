@@ -27,7 +27,7 @@ public class Vehicle {
     @Getter
     private double vehicleWidth = 1 * scale;
     @Getter
-    private double vehicleHeight = 2.5 * scale;
+    private double vehicleHeight = 104d / 72d * scale;
 
     private double sight = 1 / 4d;
     private int lifespan = 35;
