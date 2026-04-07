@@ -23,7 +23,7 @@ public class Vehicle {
     private double maxForce = 0.2 / 400d;
 
     private double crashDistance = 5 / 400d;
-    private double scale = 10 / 400d;
+    private double scale = 10 / 800d;
     @Getter
     private double vehicleWidth = 1 * scale;
     @Getter

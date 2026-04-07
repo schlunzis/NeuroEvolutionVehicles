@@ -28,8 +28,8 @@ public class VehiclesView extends Fixed {
     }
 
     public void update() {
-        int fixedWidth = this.getWidth();
-        int fixedHeight = this.getHeight();
+        int fixedWidth = this.getParent().getWidth();
+        int fixedHeight = this.getParent().getHeight();
         for (int i = views.size() - 1; i >= 0; i--) {
             VehicleView view = views.get(i);
             if (view.isFinished()) {

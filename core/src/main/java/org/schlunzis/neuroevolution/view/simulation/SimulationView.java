@@ -1,6 +1,8 @@
 package org.schlunzis.neuroevolution.view.simulation;
 
 import org.gnome.gtk.Box;
+import org.gnome.gtk.Overlay;
+import org.javagi.gobject.annotations.InstanceInit;
 import org.javagi.gtk.annotations.GtkChild;
 import org.javagi.gtk.annotations.GtkTemplate;
 import org.schlunzis.neuroevolution.model.World;
@@ -16,8 +18,16 @@ public class SimulationView extends Box {
     @GtkChild
     public VehiclesView vehiclesView;
 
+    @GtkChild
+    public Overlay overlay;
+
     public SimulationView(MemorySegment address) {
         super(address);
+    }
+
+    @InstanceInit
+    public void init() {
+        overlay.setClipOverlay(vehiclesView, true);
     }
 
     public void setWorld(World world) {
