@@ -23,11 +23,11 @@ public class Vehicle {
     private double maxForce = 0.2 / 400d;
 
     private double crashDistance = 5 / 400d;
-    private double scale = 10 / 400d;
+    private double scale = 10 / 800d;
     @Getter
     private double vehicleWidth = 1 * scale;
     @Getter
-    private double vehicleHeight = 2.5 * scale;
+    private double vehicleHeight = 104d / 72d * scale;
 
     private double sight = 1 / 4d;
     private int lifespan = 35;
