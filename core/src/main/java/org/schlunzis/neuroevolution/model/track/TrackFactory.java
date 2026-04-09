@@ -20,7 +20,7 @@ public class TrackFactory {
         return switch (type) {
             case PERLIN_NOISE -> new PerlinTrack();
             case CONVEX_HULL -> new ConvexHullTrack();
-            case PART_TRACK -> new PartTrack(0);
+            case PART_TRACK -> new PartTrack();
             default -> {
                 for (Track track : customTracks)
                     if (track.getTrackName().equals(type))

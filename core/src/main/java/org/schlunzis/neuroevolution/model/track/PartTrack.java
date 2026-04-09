@@ -66,7 +66,7 @@ public class PartTrack implements Track {
 
     @Override
     public void buildTrack() {
-        this.random = new Random(seed);
+        this.random = new Random();
         walls = new ArrayList<>();
         checkpoints = new ArrayList<>();
         track = new PART[ROWS][COLUMNS];

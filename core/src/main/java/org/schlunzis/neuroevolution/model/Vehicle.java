@@ -18,42 +18,33 @@ import static org.schlunzis.neuroevolution.sdk.util.MathUtils.map;
 @Getter
 public class Vehicle {
 
+    private final Genotype genotype;
+    private final Random random;
     @Setter
     private UUID id;
-
     private double maxForce = 0.1 / 400d;
-
     private double crashDistance = 5 / 400d;
     private double scale = 10 / 800d;
     @Getter
     private double vehicleWidth = 1 * scale;
     @Getter
     private double vehicleHeight = 104d / 72d * scale;
-
     private double sight = 1 / 4d;
     private int lifespan = 35;
     private int lifeCounter;
-
     private SVector pos;
     private SVector vel;
     private SVector acc;
     private SVector startVel;
-
     private int checkPointFitness;
     private int lapFitness;
     private double fitness;
     @Setter
     private double proportionalFitness;
     private boolean dead;
-
     private ArrayList<Ray> rays;
-
     private int lapCount;
     private int checkpointIndex;
-
-    private final Genotype genotype;
-
-    private final Random random;
 
     /**
      *
@@ -97,6 +88,71 @@ public class Vehicle {
         this(start, null, null);
     }
 
+    static boolean intersectsRotatedRectLine(
+            double cx, double cy,
+            double width, double height,
+            double theta,
+            double ax, double ay,
+            double bx, double by) {
+
+        double hx = width * 0.5;
+        double hy = height * 0.5;
+
+        // 1) Move line into rectangle-centered coordinates
+        double ax0 = ax - cx, ay0 = ay - cy;
+        double bx0 = bx - cx, by0 = by - cy;
+
+        // 2) Rotate by -theta
+        double c = Math.cos(theta);
+        double s = Math.sin(theta);
+
+        double alx = c * ax0 + s * ay0;
+        double aly = -s * ax0 + c * ay0;
+        double blx = c * bx0 + s * by0;
+        double bly = -s * bx0 + c * by0;
+
+        // 3) Segment vs AABB [-hx,hx] x [-hy,hy]
+        double dx = blx - alx;
+        double dy = bly - aly;
+
+        double tMin = 0.0;
+        double tMax = 1.0;
+
+        // X slab
+        if (Math.abs(dx) < 1e-12) {
+            if (alx < -hx || alx > hx) return false;
+        } else {
+            double tx1 = (-hx - alx) / dx;
+            double tx2 = (hx - alx) / dx;
+            if (tx1 > tx2) {
+                double tmp = tx1;
+                tx1 = tx2;
+                tx2 = tmp;
+            }
+            tMin = Math.max(tMin, tx1);
+            tMax = Math.min(tMax, tx2);
+            if (tMin > tMax) return false;
+        }
+
+        // Y slab
+        if (Math.abs(dy) < 1e-12) {
+            if (aly < -hy || aly > hy) return false;
+        } else {
+            double ty1 = (-hy - aly) / dy;
+            double ty2 = (hy - aly) / dy;
+            if (ty1 > ty2) {
+                double tmp = ty1;
+                ty1 = ty2;
+                ty2 = tmp;
+            }
+            tMin = Math.max(tMin, ty1);
+            tMax = Math.min(tMax, ty2);
+            if (tMin > tMax) return false;
+        }
+
+        return true;
+    }
+
     public Vehicle mutate() {
         return new Vehicle(pos, startVel, genotype.mutate());
     }
@@ -126,20 +182,24 @@ public class Vehicle {
                         rec = d;
                 }
             }
-            if (rec < crashDistance) { // vehicle crashed in the wall
+            inputs[i] = map(rec, 0, sight, 1, 0);
+        }
+
+        for (Boundary wall : walls) {
+            if (intersectsRotatedRectLine(pos.x(), pos.y(), vehicleWidth, vehicleHeight, vel.rawAngle(),
+                    wall.getA().x(), wall.getA().y(), wall.getB().x(), wall.getB().y())) {
                 dead = true;
                 return;
             }
-            inputs[i] = map(rec, 0, sight, 1, 0);
         }
+
         Brain.Outputs output = genotype.brain().query(inputs, vel.mag());
         double angle = output.desiredAngle();
         double speed = output.desiredSpeed();
         angle += vel.rawAngle();
         SVector steering = SVector.fromAngle(angle)
                 .withMag(speed)
-                .sub(vel)
-                .withLimit(maxForce);
+                .sub(vel);
         applyForce(steering);
     }
 

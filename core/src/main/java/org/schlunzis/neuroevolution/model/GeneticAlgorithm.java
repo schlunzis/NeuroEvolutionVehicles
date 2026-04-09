@@ -13,18 +13,13 @@ import java.util.List;
 @Slf4j
 public class GeneticAlgorithm {
 
+    private final Object trackLock = new Object();
     private double mutationRate = 0.05;
     private int populationSize = 500;
-
     private int cycles = 1;
-
     private int generationCount = 0;
-
     private ArrayList<Vehicle> population;
     private ArrayList<Vehicle> savedVehicles;
-
-    private final Object trackLock = new Object();
-
     @Getter(onMethod_ = {@Synchronized("trackLock")})
     private Track track;
 
@@ -32,6 +27,10 @@ public class GeneticAlgorithm {
 
 
     private List<Runnable> newGenerationHooks = new ArrayList<>();
+
+    public GeneticAlgorithm(Track track) {
+        this.setTrack(track);
+    }
 
     public void addNewGenerationHook(Runnable r) {
         newGenerationHooks.add(r);
@@ -41,10 +40,6 @@ public class GeneticAlgorithm {
     public void setTrack(Track track) {
         this.track = track;
         reset();
-    }
-
-    public GeneticAlgorithm(Track track) {
-        this.setTrack(track);
     }
 
     public void reset() {
@@ -99,12 +94,15 @@ public class GeneticAlgorithm {
 
             }
         }
+        if (population.stream().map(Vehicle::getLapCount).max(Integer::compareTo).orElse(0) >= 5) {
+            triggerNextGeneration();
+        }
     }
 
     public void triggerNextGeneration() {
-        track.buildTrack();
         savedVehicles.addAll(population);
         nextGeneration();
+        track.buildTrack();
         generationCount++;
         for (Runnable r : newGenerationHooks)
             r.run();

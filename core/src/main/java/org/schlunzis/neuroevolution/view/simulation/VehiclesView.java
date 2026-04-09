@@ -3,6 +3,8 @@ package org.schlunzis.neuroevolution.view.simulation;
 
 import lombok.Getter;
 import org.gnome.gtk.Fixed;
+import org.gnome.gtk.Widget;
+import org.jspecify.annotations.NonNull;
 import org.schlunzis.neuroevolution.model.Vehicle;
 import org.schlunzis.neuroevolution.model.World;
 import org.schlunzis.neuroevolution.sdk.util.SVector;
@@ -10,12 +12,13 @@ import org.schlunzis.neuroevolution.sdk.util.SVector;
 import java.lang.foreign.MemorySegment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class VehiclesView extends Fixed {
+    private final List<VehicleView> views = new ArrayList<>();
+    private final List<Widget> children = new CopyOnWriteArrayList<>();
     @Getter
     private World world;
-
-    private final List<VehicleView> views = new ArrayList<>();
 
     public VehiclesView(MemorySegment address) {
         super(address);
@@ -52,10 +55,26 @@ public class VehiclesView extends Fixed {
         }
     }
 
-    public void reset() {
-        views.forEach(this::remove);
-        views.clear();
+    @Override
+    public void put(@NonNull Widget widget, double x, double y) {
+        children.add(widget);
+        super.put(widget, x, y);
+    }
 
+    @Override
+    public void remove(@NonNull Widget widget) {
+        children.remove(widget);
+        super.remove(widget);
+    }
+
+    public void removeAllChildren() {
+        children.forEach(this::remove);
+        children.clear();
+    }
+
+    public void reset() {
+        removeAllChildren();
+        views.clear();
         world.getGa().getPopulation().forEach(v -> {
             VehicleView view = new VehicleView(v);
             views.add(view);
