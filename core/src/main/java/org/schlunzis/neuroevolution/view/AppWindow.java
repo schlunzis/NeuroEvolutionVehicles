@@ -72,6 +72,7 @@ public class AppWindow extends ApplicationWindow {
                 _ -> {
                     VehicleTab tab = new VehicleTab(controller, vehicle);
                     TabPage page = tab_view.addPage(tab, null);
+                    page.setTitle(vehicle.getId().toString().substring(0, 5));
                     // TODO remove when closed
                     return new VehicleTabInfo(tab, page);
                 }
