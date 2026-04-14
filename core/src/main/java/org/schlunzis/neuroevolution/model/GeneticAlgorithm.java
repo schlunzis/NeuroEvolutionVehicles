@@ -13,18 +13,13 @@ import java.util.List;
 @Slf4j
 public class GeneticAlgorithm {
 
+    private final Object trackLock = new Object();
     private double mutationRate = 0.05;
-    private int populationSize = 100;
-
+    private int populationSize = 500;
     private int cycles = 1;
-
     private int generationCount = 0;
-
     private ArrayList<Vehicle> population;
     private ArrayList<Vehicle> savedVehicles;
-
-    private final Object trackLock = new Object();
-
     @Getter(onMethod_ = {@Synchronized("trackLock")})
     private Track track;
 
@@ -32,6 +27,10 @@ public class GeneticAlgorithm {
 
 
     private List<Runnable> newGenerationHooks = new ArrayList<>();
+
+    public GeneticAlgorithm(Track track) {
+        this.setTrack(track);
+    }
 
     public void addNewGenerationHook(Runnable r) {
         newGenerationHooks.add(r);
@@ -41,10 +40,6 @@ public class GeneticAlgorithm {
     public void setTrack(Track track) {
         this.track = track;
         reset();
-    }
-
-    public GeneticAlgorithm(Track track) {
-        this.setTrack(track);
     }
 
     public void reset() {
@@ -57,7 +52,7 @@ public class GeneticAlgorithm {
             track.buildTrack();
 
             for (int i = 0; i < populationSize; i++) {
-                population.add(new Vehicle(track.getStart(), getStartVelocity(), null, mutationRate));
+                population.add(new Vehicle(track.getStart(), getStartVelocity(), null));
             }
         }
     }
@@ -99,11 +94,15 @@ public class GeneticAlgorithm {
 
             }
         }
+        if (population.stream().map(Vehicle::getLapCount).max(Integer::compareTo).orElse(0) >= 5) {
+            triggerNextGeneration();
+        }
     }
 
     public void triggerNextGeneration() {
-        track.buildTrack();
+        savedVehicles.addAll(population);
         nextGeneration();
+        track.buildTrack();
         generationCount++;
         for (Runnable r : newGenerationHooks)
             r.run();
@@ -115,7 +114,10 @@ public class GeneticAlgorithm {
         calculateFitness();
         population = new ArrayList<>();
         prevBest = findBestVehicle();
-        population.add(prevBest);
+        System.out.println("Best fitness: " + prevBest.getFitness());
+        System.out.println("Best proportional fitness: " + prevBest.getProportionalFitness());
+        System.out.println("Best mutationRate: " + prevBest.getGenotype().mutationRate());
+        population.add(prevBest.copyWithPos(track.getStart()));
         for (int i = 1; i < populationSize; i++) {
             population.add(pickOne());
         }
@@ -131,37 +133,35 @@ public class GeneticAlgorithm {
                 best = v;
             }
         }
-        Vehicle v = new Vehicle(track.getStart(), getStartVelocity(), best.getBrain(), mutationRate);
-        v.setId(best.getId());
-        return v;
+        return best;
     }
 
     private Vehicle pickOne() {
         int index = 0;
         double r = Math.random();
         while (r > 0) {
-            r = r - savedVehicles.get(index).getFitness();
+            r = r - savedVehicles.get(index).getProportionalFitness();
             index++;
         }
         index--;
         Vehicle v = savedVehicles.get(index);
-        Vehicle child = new Vehicle(track.getStart(), getStartVelocity(), v.getBrain(), mutationRate);
+        Vehicle child = new Vehicle(track.getStart(), getStartVelocity(), v.getGenotype().copy());
 
-        child.mutate();
+        child = child.mutate();
         return child;
     }
 
     @Synchronized
     private void calculateFitness() throws ArithmeticException {
         for (Vehicle v : savedVehicles)
-            v.calculateFitness();
+            v.calculateFitness(track.getCheckpoints());
         double sum = 0;
         for (Vehicle v : savedVehicles)
             sum += v.getFitness();
-        if (sum == 0)
+        if (sum <= 0)
             throw new ArithmeticException("Could not calculate fitness");
         for (Vehicle v : savedVehicles) {
-            v.setFitness(v.getFitness() / sum);
+            v.setProportionalFitness(v.getFitness() / sum);
         }
     }
 

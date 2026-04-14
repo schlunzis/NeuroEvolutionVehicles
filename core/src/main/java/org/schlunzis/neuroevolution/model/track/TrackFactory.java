@@ -1,11 +1,10 @@
 package org.schlunzis.neuroevolution.model.track;
 
-import java.util.List;
-
-import org.schlunzis.neuroevolution.sdk.track.Track;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.schlunzis.neuroevolution.sdk.track.Track;
+
+import java.util.List;
 
 public class TrackFactory {
 
@@ -17,7 +16,7 @@ public class TrackFactory {
     private static List<Track> customTracks;
 
     public static Track createTrack(String type) {
-      
+
         return switch (type) {
             case PERLIN_NOISE -> new PerlinTrack();
             case CONVEX_HULL -> new ConvexHullTrack();
