@@ -37,10 +37,9 @@ public class PartTrack implements Track {
 
     private static final int ROWS = 10;
     private static final int COLUMNS = 10;
-
-    private Random random;
     private final boolean useSeed;
     private final int seed;
+    private Random random;
     private PART[][] track;
 
     @Getter
@@ -50,10 +49,7 @@ public class PartTrack implements Track {
     private List<Boundary> walls;
     @Getter
     private List<Boundary> checkpoints;
-
-    public String getTrackName() {
-        return "PartTrack";
-    }
+    private boolean flipped = false;
 
     protected PartTrack() {
         this.seed = 0;
@@ -65,6 +61,10 @@ public class PartTrack implements Track {
         this.seed = seed;
         this.useSeed = true;
         random = new Random(seed);
+    }
+
+    public String getTrackName() {
+        return "PartTrack";
     }
 
     @Override
@@ -89,8 +89,25 @@ public class PartTrack implements Track {
         track[ROWS - 1][COLUMNS - 1] = PART.TOP_LEFT;
         generateWallsAndCheckpoints(ROWS - 1, COLUMNS - 1);
 
+        if (random.nextBoolean()) {
+            flip();
+            flipped = true;
+        } else
+            flipped = false;
+
         start = checkpoints.getFirst().midPoint();
+
+
     }
+
+    private void flip() {
+        checkpoints = checkpoints.reversed();
+        for (int i = 0; i < 4; i++) {
+            Boundary last = checkpoints.removeLast();
+            checkpoints.addFirst(last);
+        }
+    }
+
 
     private void generateTrack() {
         int startRow = ROWS - 2;
@@ -217,6 +234,7 @@ public class PartTrack implements Track {
         Boundary boundary = checkpoints.getFirst();
         return SVector.sub(boundary.getA(), boundary.getB())
                 .rotate(-Math.PI * 0.5)
+                .mult(flipped ? -1 : 1)
                 .normalized();
     }
 
@@ -293,12 +311,12 @@ public class PartTrack implements Track {
             this.checkpoint = bounds.getLast();
         }
 
-        public DIRECTION getTurn() {
-            return DIRECTION.getTurn(in, out);
-        }
-
         public static List<PART> getPartsWithIn(DIRECTION direction) {
             return new ArrayList<>(Arrays.stream(values()).filter(part -> part.getIn() == direction).toList());
+        }
+
+        public DIRECTION getTurn() {
+            return DIRECTION.getTurn(in, out);
         }
     }
 }
