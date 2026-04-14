@@ -6,6 +6,7 @@
         <file preprocess="xml-stripblanks">simulation-view.ui</file>
         <file preprocess="xml-stripblanks">simulation-tab.ui</file>
         <file preprocess="xml-stripblanks">vehicle-tab.ui</file>
+        <file preprocess="xml-stripblanks">components/level-bar-row.ui</file>
     </gresource>
     <gresource prefix="/org/schlunzis/neuroevolution/images">
         <file preprocess="xml-stripblanks">car-top-view.svg</file>

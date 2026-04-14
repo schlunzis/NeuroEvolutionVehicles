@@ -6,7 +6,6 @@ import org.gnome.gio.File;
 import org.gnome.gtk.Box;
 import org.gnome.gtk.FileDialog;
 import org.gnome.gtk.FileFilter;
-import org.gnome.gtk.LevelBar;
 import org.javagi.base.GErrorException;
 import org.javagi.gtk.annotations.GtkCallback;
 import org.javagi.gtk.annotations.GtkChild;
@@ -14,6 +13,7 @@ import org.javagi.gtk.annotations.GtkTemplate;
 import org.schlunzis.neuroevolution.model.Vehicle;
 import org.schlunzis.neuroevolution.sdk.Constants;
 import org.schlunzis.neuroevolution.simulation.SimulationController;
+import org.schlunzis.neuroevolution.view.components.LevelBarRow;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public class VehicleTab extends Box {
     public ActionRow idRow;
 
     @GtkChild
-    public LevelBar velocityBar;
+    public LevelBarRow velocityBar;
 
     public VehicleTab(SimulationController controller, Vehicle vehicle) {
         this.controller = controller;

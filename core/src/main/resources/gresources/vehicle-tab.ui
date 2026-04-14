@@ -18,6 +18,7 @@
                                 <property name="spacing">4</property>
                                 <child>
                                     <object class="GtkListBox">
+                                        <property name="selection-mode">none</property>
                                         <style>
                                             <class name="boxed-list"/>
                                         </style>
@@ -30,22 +31,9 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="GtkListBoxRow">
-                                                <property name="child">
-                                                    <object class="GtkBox">
-                                                        <property name="orientation">vertical</property>
-                                                        <property name="spacing">4</property>
-                                                        <child>
-                                                            <object class="GtkLabel">
-                                                                <property name="label">Velocity</property>
-                                                            </object>
-                                                        </child>
-                                                        <child>
-                                                            <object class="GtkLevelBar" id="velocityBar">
-                                                            </object>
-                                                        </child>
-                                                    </object>
-                                                </property>
+                                            <object class="org_schlunzis_neuroevolution_view_components_LevelBarRow"
+                                                    id="velocityBar">
+                                                <property name="title">Velocity</property>
                                             </object>
                                         </child>
 
