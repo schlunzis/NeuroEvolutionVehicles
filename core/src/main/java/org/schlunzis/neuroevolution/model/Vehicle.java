@@ -20,6 +20,8 @@ public class Vehicle {
 
     private final Genotype genotype;
     private final Random random;
+    private final int alpha = 60;
+    private final int delta = 15;
     @Setter
     private UUID id;
     private double maxForce = 0.1 / 400d;
@@ -30,7 +32,7 @@ public class Vehicle {
     @Getter
     private double vehicleHeight = 104d / 72d * scale;
     private double sight = 1 / 4d;
-    private int lifespan = 35;
+    private int lifespan = 20;
     private int lifeCounter;
     private SVector pos;
     private SVector vel;
@@ -74,7 +76,7 @@ public class Vehicle {
         this.startVel = new SVector(vel);
         acc = new SVector();
         rays = new ArrayList<>();
-        for (int a = -45; a <= 45; a += 15) {
+        for (int a = -alpha; a <= alpha; a += delta) {
             rays.add(new Ray(pos, Math.toRadians(a)));
         }
 
@@ -214,7 +216,7 @@ public class Vehicle {
                 dead = true;
             }
             rays = new ArrayList<>();
-            for (int a = -45; a <= 45; a += 15) {
+            for (int a = -alpha; a <= alpha; a += delta) {
                 rays.add(new Ray(this.pos, Math.toRadians(a) + this.vel.rawAngle()));
             }
         }

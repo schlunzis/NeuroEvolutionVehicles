@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="org_schlunzis_neuroevolution_view_tabs_VehicleTab" parent="GtkBox">
+        <property name="width-request">300</property>
+        <child>
+            <object class="GtkScrolledWindow">
+                <property name="hscrollbar-policy">never</property>
+                <child>
+                    <object class="AdwClamp">
+                        <property name="hexpand">true</property>
+                        <property name="margin-top">4</property>
+                        <property name="margin-start">4</property>
+                        <property name="margin-end">4</property>
+                        <property name="margin-bottom">4</property>
+                        <child>
+                            <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">4</property>
+                                <child>
+                                    <object class="GtkListBox">
+                                        <style>
+                                            <class name="boxed-list"/>
+                                        </style>
+                                        <child>
+                                            <object class="AdwActionRow" id="idRow">
+                                                <property name="title" translatable="yes">ID</property>
+                                                <style>
+                                                    <class name="property"/>
+                                                </style>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="AdwButtonRow">
+                                                <property name="title" translatable="yes">save model</property>
+                                                <signal name="activated" handler="saveModelButtonPressed"/>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                    </object>
+                </child>
+            </object>
+        </child>
+    </template>
+</interface>

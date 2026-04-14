@@ -3,10 +3,13 @@ package org.schlunzis.neuroevolution.view.simulation;
 
 import lombok.Getter;
 import org.gnome.gtk.Fixed;
+import org.gnome.gtk.GestureClick;
 import org.gnome.gtk.Widget;
+import org.javagi.gobject.annotations.Signal;
 import org.jspecify.annotations.NonNull;
 import org.schlunzis.neuroevolution.model.Vehicle;
 import org.schlunzis.neuroevolution.model.World;
+import org.schlunzis.neuroevolution.model.g.GVehicle;
 import org.schlunzis.neuroevolution.sdk.util.SVector;
 
 import java.lang.foreign.MemorySegment;
@@ -77,9 +80,18 @@ public class VehiclesView extends Fixed {
         views.clear();
         world.getGa().getPopulation().forEach(v -> {
             VehicleView view = new VehicleView(v);
+            GestureClick gesture = new GestureClick();
+            gesture.onPressed((_, _, _) -> emit("selected", new GVehicle(v)));
+            // FIXME: GestureClick does not rotate as the view does -> Hitbox is not aligned with the image.
+            view.addController(gesture);
             views.add(view);
             this.put(view, 0, 0);
         });
+    }
+
+    @Signal
+    public interface Selected {
+        void run(GVehicle vehicle);
     }
 
 }

@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.github.schlunzis.ze-impressive-schwifty</groupId>
             <artifactId>zis-ai</artifactId>
-            <version>79254f034a784d3dd9166879c74732b935635539</version>
+            <version>da3e9c1dbdb41bb8d4991bc5443ad7a516b2a094</version>
         </dependency>
         <!-- to be removed -->
         <dependency>

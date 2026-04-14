@@ -101,8 +101,9 @@ public class GeneticAlgorithm {
 
     public void triggerNextGeneration() {
         savedVehicles.addAll(population);
-        nextGeneration();
+        calculateFitness();
         track.buildTrack();
+        nextGeneration();
         generationCount++;
         for (Runnable r : newGenerationHooks)
             r.run();
@@ -111,7 +112,6 @@ public class GeneticAlgorithm {
     }
 
     private void nextGeneration() {
-        calculateFitness();
         population = new ArrayList<>();
         prevBest = findBestVehicle();
         System.out.println("Best fitness: " + prevBest.getFitness());
@@ -165,4 +165,13 @@ public class GeneticAlgorithm {
         }
     }
 
+    public void restartWithBrain(Brain brain) {
+        reset();
+        population.clear();
+        for (int i = 0; i < populationSize; i++) {
+            population.add(new Vehicle(track.getStart(), getStartVelocity(), new Genotype(mutationRate, brain.copy())));
+        }
+        for (Runnable r : newGenerationHooks)
+            r.run();
+    }
 }

@@ -1,13 +1,13 @@
 package org.schlunzis.neuroevolution.view.simulation;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.freedesktop.cairo.Context;
 import org.gnome.gdk.Texture;
 import org.gnome.graphene.Point;
 import org.gnome.graphene.Rect;
 import org.gnome.graphene.Size;
 import org.gnome.gtk.DrawingArea;
-import org.gnome.gtk.GestureClick;
 import org.gnome.gtk.Snapshot;
 import org.javagi.gobject.annotations.InstanceInit;
 import org.schlunzis.neuroevolution.model.Vehicle;
@@ -16,29 +16,23 @@ public class VehicleView extends DrawingArea {
 
     private static Texture carTexture;
 
+    static {
+        carTexture = Texture.fromResource("/org/schlunzis/neuroevolution/images/car-top-view.svg");
+    }
+
     @Getter
     private final Vehicle vehicle;
     private double angleDeg;
+    @Setter
     private boolean highlight = false;
 
     public VehicleView(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
 
-    static {
-        carTexture = Texture.fromResource("/org/schlunzis/neuroevolution/images/car-top-view.svg");
-    }
-
     @InstanceInit
     public void init() {
         this.setDrawFunc(this::draw);
-        GestureClick gesture = new GestureClick();
-        gesture.onPressed((_, _, _) -> {
-            System.out.println(vehicle.getId());
-            highlight = true;
-        });
-        // FIXME: GestureClick does not rotate as the view does -> Hitbox is not aligned with the image.
-        this.addController(gesture);
     }
 
     private void draw(DrawingArea drawingArea, Context cr, int width, int height) {
