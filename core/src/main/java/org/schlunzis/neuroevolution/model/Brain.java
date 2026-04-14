@@ -2,8 +2,12 @@ package org.schlunzis.neuroevolution.model;
 
 import org.schlunzis.zis.ai.nn.GeneticNeuralNetwork;
 
+import java.io.File;
+import java.io.IOException;
+
 import static org.schlunzis.neuroevolution.sdk.Constants.MAX_SPEED;
 import static org.schlunzis.neuroevolution.sdk.util.MathUtils.map;
+import static org.schlunzis.zis.ai.nn.NeuralNetwork.deserialize;
 
 
 public class Brain {
@@ -16,6 +20,10 @@ public class Brain {
 
     public Brain(GeneticNeuralNetwork network) {
         this.network = network;
+    }
+
+    public static Brain load(File location) throws IOException, ClassNotFoundException {
+        return new Brain((GeneticNeuralNetwork) deserialize(location));
     }
 
     public Brain copy() {
@@ -40,6 +48,10 @@ public class Brain {
                 angle,
                 speed
         );
+    }
+
+    public void save(File location) throws IOException {
+        network.serialize(location);
     }
 
     public record Outputs(

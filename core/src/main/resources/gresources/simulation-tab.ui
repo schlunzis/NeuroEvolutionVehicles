@@ -42,8 +42,9 @@
                                             <class name="boxed-list"/>
                                         </style>
                                         <child>
-                                            <object class="AdwSwitchRow">
-                                                <property name="title" translatable="yes">Switch Row</property>
+                                            <object class="AdwButtonRow">
+                                                <property name="title" translatable="yes">export model</property>
+                                                <signal name="activated" handler="exportModelButtonPressed"/>
                                             </object>
                                         </child>
                                     </object>
