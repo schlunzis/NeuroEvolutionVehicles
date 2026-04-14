@@ -92,6 +92,14 @@
                                             <class name="boxed-list"/>
                                         </style>
                                         <child>
+                                            <object class="AdwActionRow" id="stateRow">
+                                                <property name="title" translatable="yes">State</property>
+                                                <style>
+                                                    <class name="property"/>
+                                                </style>
+                                            </object>
+                                        </child>
+                                        <child>
                                             <object class="org_schlunzis_neuroevolution_view_components_LevelBarRow"
                                                     id="lifespanBar">
                                                 <property name="title">Lifespan</property>

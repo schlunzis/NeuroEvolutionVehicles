@@ -31,6 +31,8 @@ public class VehicleTab extends Box {
     public ActionRow mutationRateRow;
 
     @GtkChild
+    public ActionRow stateRow;
+    @GtkChild
     public LevelBarRow lifespanBar;
     @GtkChild
     public LevelBarRow velocityBar;
@@ -49,6 +51,15 @@ public class VehicleTab extends Box {
     }
 
     public void update() {
+        if (vehicleToShow.isDead()) {
+            stateRow.setSubtitle("Dead");
+            stateRow.removeCssClass("success");
+            stateRow.addCssClass("error");
+        } else {
+            stateRow.setSubtitle("Alive");
+            stateRow.addCssClass("success");
+            stateRow.removeCssClass("error");
+        }
         lifespanBar.setMaxValue(vehicleToShow.getLifespan() + 1); // +1 since it dies when the counter is greater than the lifespan
         lifespanBar.setValue(vehicleToShow.getLifeCounter());
         velocityBar.setValue(vehicleToShow.getVel().mag());
