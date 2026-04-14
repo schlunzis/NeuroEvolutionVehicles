@@ -28,17 +28,29 @@ public class VehicleTab extends Box {
     public ActionRow idRow;
 
     @GtkChild
+    public ActionRow mutationRateRow;
+
+    @GtkChild
+    public LevelBarRow lifespanBar;
+    @GtkChild
     public LevelBarRow velocityBar;
 
     public VehicleTab(SimulationController controller, Vehicle vehicle) {
         this.controller = controller;
         this.vehicleToShow = vehicle;
+
         idRow.setSubtitle(vehicle.getId().toString());
+
+        mutationRateRow.setSubtitle(Double.toString(vehicle.getGenotype().mutationRate()));
+
+        lifespanBar.setMinValue(0);
         velocityBar.setMinValue(0);
         velocityBar.setMaxValue(Constants.MAX_SPEED);
     }
 
     public void update() {
+        lifespanBar.setMaxValue(vehicleToShow.getLifespan() + 1); // +1 since it dies when the counter is greater than the lifespan
+        lifespanBar.setValue(vehicleToShow.getLifeCounter());
         velocityBar.setValue(vehicleToShow.getVel().mag());
     }
 

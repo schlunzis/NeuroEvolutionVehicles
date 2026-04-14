@@ -31,7 +31,7 @@
                                 <property name="halign">end</property>
                                 <property name="label"
                                           bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"
-                                          bind-property="value"
+                                          bind-property="value-text"
                                           bind-flags="default"/>
                                 <style>
                                     <class name="dimmed"/>
@@ -55,6 +55,10 @@
                                   bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"
                                   bind-property="value"
                                   bind-flags="default"/>
+                        <!--                        <property name="mode"-->
+                        <!--                                  bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"-->
+                        <!--                                  bind-property="mode"-->
+                        <!--                                  bind-flags="sync-create"/>-->
                     </object>
                 </child>
             </object>

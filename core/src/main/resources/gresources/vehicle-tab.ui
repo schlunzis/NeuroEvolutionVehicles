@@ -17,6 +17,15 @@
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">4</property>
                                 <child>
+                                    <object class="GtkLabel">
+                                        <property name="label">General</property>
+                                        <property name="halign">start</property>
+                                        <style>
+                                            <class name="title-3"/>
+                                        </style>
+                                    </object>
+                                </child>
+                                <child>
                                     <object class="GtkListBox">
                                         <property name="selection-mode">none</property>
                                         <style>
@@ -30,17 +39,69 @@
                                                 </style>
                                             </object>
                                         </child>
+                                    </object>
+                                </child>
+
+                                <child>
+                                    <object class="GtkLabel">
+                                        <property name="label">Genotype</property>
+                                        <property name="halign">start</property>
+                                        <property name="margin-top">12</property>
+                                        <style>
+                                            <class name="title-3"/>
+                                        </style>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkListBox">
+                                        <property name="selection-mode">none</property>
+                                        <style>
+                                            <class name="boxed-list"/>
+                                        </style>
+                                        <child>
+                                            <object class="AdwActionRow" id="mutationRateRow">
+                                                <property name="title" translatable="yes">Mutation Rate</property>
+                                                <style>
+                                                    <class name="property"/>
+                                                </style>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="AdwButtonRow">
+                                                <property name="title" translatable="yes">Save Brain</property>
+                                                <signal name="activated" handler="saveModelButtonPressed"/>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
+
+                                <child>
+                                    <object class="GtkLabel">
+                                        <property name="label">Live</property>
+                                        <property name="halign">start</property>
+                                        <property name="margin-top">12</property>
+                                        <style>
+                                            <class name="title-3"/>
+                                        </style>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkListBox">
+                                        <property name="selection-mode">none</property>
+                                        <style>
+                                            <class name="boxed-list"/>
+                                        </style>
+                                        <child>
+                                            <object class="org_schlunzis_neuroevolution_view_components_LevelBarRow"
+                                                    id="lifespanBar">
+                                                <property name="title">Lifespan</property>
+                                                <property name="mode">discrete</property>
+                                            </object>
+                                        </child>
                                         <child>
                                             <object class="org_schlunzis_neuroevolution_view_components_LevelBarRow"
                                                     id="velocityBar">
                                                 <property name="title">Velocity</property>
-                                            </object>
-                                        </child>
-
-                                        <child>
-                                            <object class="AdwButtonRow">
-                                                <property name="title" translatable="yes">save model</property>
-                                                <signal name="activated" handler="saveModelButtonPressed"/>
                                             </object>
                                         </child>
                                     </object>
