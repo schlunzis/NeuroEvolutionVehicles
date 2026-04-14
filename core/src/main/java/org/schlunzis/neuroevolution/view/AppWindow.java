@@ -62,6 +62,16 @@ public class AppWindow extends ApplicationWindow {
 
             simulationView.getVehiclesView().connect("selected",
                     (VehiclesView.Selected) vehicle -> showVehicleTab(vehicle.getVehicle()));
+            tab_view.onClosePage(page -> {
+                UUID id = vehicleTabs.entrySet().stream()
+                        .filter(e -> e.getValue().page() == page)
+                        .map(Map.Entry::getKey)
+                        .findFirst()
+                        .orElseThrow();
+                vehicleTabs.remove(id);
+                return false;
+
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,7 +83,6 @@ public class AppWindow extends ApplicationWindow {
                     VehicleTab tab = new VehicleTab(controller, vehicle);
                     TabPage page = tab_view.addPage(tab, null);
                     page.setTitle(vehicle.getId().toString().substring(0, 5));
-                    // TODO remove when closed
                     return new VehicleTabInfo(tab, page);
                 }
         );
