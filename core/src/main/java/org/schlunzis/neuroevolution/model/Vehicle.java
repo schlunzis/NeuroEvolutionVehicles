@@ -30,7 +30,7 @@ public class Vehicle {
     @Getter
     private double vehicleHeight = 104d / 72d * scale;
     private double sight = 1 / 4d;
-    private int lifespan = 35;
+    private int lifespan = 20;
     private int lifeCounter;
     private SVector pos;
     private SVector vel;

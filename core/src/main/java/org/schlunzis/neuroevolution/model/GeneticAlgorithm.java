@@ -165,4 +165,13 @@ public class GeneticAlgorithm {
         }
     }
 
+    public void restartWithBrain(Brain brain) {
+        reset();
+        population.clear();
+        for (int i = 0; i < populationSize; i++) {
+            population.add(new Vehicle(track.getStart(), getStartVelocity(), new Genotype(mutationRate, brain.copy())));
+        }
+        for (Runnable r : newGenerationHooks)
+            r.run();
+    }
 }
