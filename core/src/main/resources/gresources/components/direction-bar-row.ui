@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-    <template class="org_schlunzis_neuroevolution_view_components_LevelBarRow" parent="GtkListBoxRow">
+    <template class="org_schlunzis_neuroevolution_view_components_DirectionBarRow" parent="GtkListBoxRow">
         <property name="activatable">false</property>
         <property name="child">
             <object class="GtkBox">
@@ -19,7 +19,7 @@
                                 <property name="halign">start</property>
                                 <property name="hexpand">true</property>
                                 <property name="label"
-                                          bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"
+                                          bind-source="org_schlunzis_neuroevolution_view_components_DirectionBarRow"
                                           bind-property="title"
                                           bind-flags="sync-create"/>
                                 <style>
@@ -31,7 +31,7 @@
                             <object class="GtkLabel" id="valueLabel">
                                 <property name="halign">end</property>
                                 <property name="label"
-                                          bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"
+                                          bind-source="org_schlunzis_neuroevolution_view_components_DirectionBarRow"
                                           bind-property="value-text"
                                           bind-flags="default"/>
                                 <style>
@@ -43,23 +43,18 @@
                     </object>
                 </child>
                 <child>
-                    <object class="GtkLevelBar" id="levelBar">
-                        <property name="min-value"
-                                  bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"
-                                  bind-property="min-value"
-                                  bind-flags="default"/>
-                        <property name="max-value"
-                                  bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"
-                                  bind-property="max-value"
-                                  bind-flags="default"/>
-                        <property name="value"
-                                  bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"
-                                  bind-property="value"
-                                  bind-flags="default"/>
-                        <!--                        <property name="mode"-->
-                        <!--                                  bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"-->
-                        <!--                                  bind-property="mode"-->
-                        <!--                                  bind-flags="sync-create"/>-->
+                    <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <property name="homogeneous">true</property>
+                        <child>
+                            <object class="GtkLevelBar" id="levelBarLeft">
+                                <property name="inverted">true</property>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkLevelBar" id="levelBarRight">
+                            </object>
+                        </child>
                     </object>
                 </child>
             </object>

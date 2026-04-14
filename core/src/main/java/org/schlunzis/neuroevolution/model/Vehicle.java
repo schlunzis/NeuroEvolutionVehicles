@@ -47,6 +47,7 @@ public class Vehicle {
     private ArrayList<Ray> rays;
     private int lapCount;
     private int checkpointIndex;
+    private Brain.Outputs lastOutput = new Brain.Outputs(0, 0);
 
     /**
      *
@@ -196,6 +197,7 @@ public class Vehicle {
         }
 
         Brain.Outputs output = genotype.brain().query(inputs, vel.mag());
+        lastOutput = output;
         double angle = output.desiredAngle();
         double speed = output.desiredSpeed();
         angle += vel.rawAngle();

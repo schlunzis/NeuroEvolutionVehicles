@@ -112,6 +112,18 @@
                                                 <property name="title">Velocity</property>
                                             </object>
                                         </child>
+                                        <child>
+                                            <object class="org_schlunzis_neuroevolution_view_components_DirectionBarRow"
+                                                    id="desiredAngleBar">
+                                                <property name="title">Steering</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="org_schlunzis_neuroevolution_view_components_LevelBarRow"
+                                                    id="desiredVelocityBar">
+                                                <property name="title">Desired Velocity</property>
+                                            </object>
+                                        </child>
                                     </object>
                                 </child>
                             </object>
