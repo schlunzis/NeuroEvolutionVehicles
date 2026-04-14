@@ -55,16 +55,6 @@
                                                 </property>
                                             </object>
                                         </child>
-                                        <child>
-                                            <object class="AdwTabPage">
-                                                <property name="title">tab2</property>
-                                                <property name="child">
-                                                    <object class="GtkLabel">
-                                                        <property name="label">this is tab2</property>
-                                                    </object>
-                                                </property>
-                                            </object>
-                                        </child>
                                     </object>
                                 </child>
                             </object>

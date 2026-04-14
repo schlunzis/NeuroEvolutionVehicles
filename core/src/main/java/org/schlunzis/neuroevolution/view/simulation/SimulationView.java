@@ -1,5 +1,6 @@
 package org.schlunzis.neuroevolution.view.simulation;
 
+import lombok.Getter;
 import org.gnome.gtk.Box;
 import org.gnome.gtk.Overlay;
 import org.javagi.gobject.annotations.InstanceInit;
@@ -15,6 +16,7 @@ public class SimulationView extends Box {
     @GtkChild
     public TrackView trackView;
 
+    @Getter
     @GtkChild
     public VehiclesView vehiclesView;
 
