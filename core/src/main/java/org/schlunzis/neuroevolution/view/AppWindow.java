@@ -51,6 +51,7 @@ public class AppWindow extends ApplicationWindow {
             controller = new SimulationController(world, () -> {
                 simulationView.update();
                 simulationTab.update();
+                vehicleTabs.values().forEach(t -> t.tab().update());
             });
             simulationTab.setController(controller);
 
