@@ -5,11 +5,9 @@ import lombok.Setter;
 import org.gnome.gtk.Box;
 import org.gnome.gtk.ListBoxRow;
 import org.gnome.gtk.Widget;
-import org.javagi.gobject.annotations.Layout;
 import org.javagi.gtk.annotations.GtkChild;
 import org.javagi.gtk.annotations.GtkTemplate;
 
-import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 
 @Setter
@@ -20,7 +18,6 @@ public class CustomRow extends ListBoxRow {
     @GtkChild
     public Box box;
 
-    @SuppressWarnings("unused")
     private String title;
     private String sideText;
     private Widget content;
@@ -29,20 +26,13 @@ public class CustomRow extends ListBoxRow {
         super(address);
     }
 
-    @Layout
-    public static MemoryLayout getMemoryLayout() {
-        return MemoryLayout.structLayout(
-                ListBoxRow.getMemoryLayout().withName("parent_instance")
-        ).withName("org_schlunzis_neuroevolution_view_components_CustomRow");
-    }
-
     public void setSideText(String sideText) {
         this.sideText = sideText;
         this.notify("side-text");
     }
 
     public void setContent(Widget content) {
-        box.remove(this.content);
+        if (this.content != null) box.remove(this.content);
         this.content = content;
         box.append(content);
         this.notify("content");

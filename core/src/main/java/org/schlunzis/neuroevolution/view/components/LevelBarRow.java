@@ -3,10 +3,8 @@ package org.schlunzis.neuroevolution.view.components;
 import lombok.Getter;
 import lombok.Setter;
 import org.gnome.gtk.LevelBarMode;
-import org.javagi.gobject.annotations.Layout;
 import org.javagi.gtk.annotations.GtkTemplate;
 
-import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 
 @Setter
@@ -17,18 +15,10 @@ public class LevelBarRow extends CustomRow {
     private double minValue;
     private double maxValue;
     private double value;
-    @SuppressWarnings("unused")
     private LevelBarMode mode;
 
     public LevelBarRow(MemorySegment address) {
         super(address);
-    }
-
-    @Layout
-    public static MemoryLayout getMemoryLayout() {
-        return MemoryLayout.structLayout(
-                CustomRow.getMemoryLayout().withName("parent_instance")
-        ).withName("org_schlunzis_neuroevolution_view_components_LevelBarRow");
     }
 
     public void setMinValue(double minValue) {
