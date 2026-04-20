@@ -5,6 +5,7 @@ import org.javagi.base.GErrorException;
 import org.javagi.gobject.types.Types;
 import org.javagi.gtk.types.TemplateTypes;
 import org.schlunzis.neuroevolution.view.App;
+import org.schlunzis.neuroevolution.view.components.CustomRow;
 import org.schlunzis.neuroevolution.view.components.DirectionBarRow;
 import org.schlunzis.neuroevolution.view.components.LevelBarRow;
 import org.schlunzis.neuroevolution.view.simulation.SimulationView;
@@ -16,6 +17,7 @@ import org.schlunzis.neuroevolution.view.tabs.SimulationTab;
 public class Launcher {
 
     static {
+        TemplateTypes.register(CustomRow.class);
         TemplateTypes.register(LevelBarRow.class);
         TemplateTypes.register(DirectionBarRow.class);
         TemplateTypes.register(SimulationView.class);

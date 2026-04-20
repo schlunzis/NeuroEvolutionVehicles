@@ -3,7 +3,6 @@ package org.schlunzis.neuroevolution.view.components;
 import lombok.Getter;
 import lombok.Setter;
 import org.gnome.gtk.LevelBarMode;
-import org.gnome.gtk.ListBoxRow;
 import org.javagi.gtk.annotations.GtkTemplate;
 
 import java.lang.foreign.MemorySegment;
@@ -11,15 +10,11 @@ import java.lang.foreign.MemorySegment;
 @Setter
 @Getter
 @GtkTemplate(ui = "/org/schlunzis/neuroevolution/components/level-bar-row.ui")
-public class LevelBarRow extends ListBoxRow {
+public class LevelBarRow extends CustomRow {
 
-    @SuppressWarnings("unused")
-    private String title;
     private double minValue;
     private double maxValue;
     private double value;
-    private String valueText;
-    @SuppressWarnings("unused")
     private LevelBarMode mode;
 
     public LevelBarRow(MemorySegment address) {
@@ -44,13 +39,8 @@ public class LevelBarRow extends ListBoxRow {
         if (mode != null && mode.equals(LevelBarMode.DISCRETE)) format = "%.0f";
         else format = "%.6f";
         String text = String.format(format, value);
-        setValueText(text);
+        setSideText(text);
 
         this.notify("value");
-    }
-
-    public void setValueText(String valueText) {
-        this.valueText = valueText;
-        this.notify("value-text");
     }
 }
