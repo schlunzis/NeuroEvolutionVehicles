@@ -17,6 +17,7 @@
                           bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"
                           bind-property="value"
                           bind-flags="default"/>
+                <!-- Commented out because the width request gets very large for large max values -->
                 <!--                        <property name="mode"-->
                 <!--                                  bind-source="org_schlunzis_neuroevolution_view_components_LevelBarRow"-->
                 <!--                                  bind-property="mode"-->

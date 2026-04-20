@@ -1,60 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-    <template class="org_schlunzis_neuroevolution_view_components_DirectionBarRow" parent="GtkListBoxRow">
+    <template class="org_schlunzis_neuroevolution_view_components_DirectionBarRow"
+              parent="org_schlunzis_neuroevolution_view_components_CustomRow">
         <property name="activatable">false</property>
-        <property name="child">
+        <property name="content">
             <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="margin-top">8</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <property name="margin-bottom">8</property>
-                <property name="spacing">6</property>
+                <property name="orientation">horizontal</property>
+                <property name="homogeneous">true</property>
                 <child>
-                    <object class="GtkBox">
-                        <property name="orientation">horizontal</property>
-                        <property name="spacing">8</property>
-                        <child>
-                            <object class="GtkLabel" id="title">
-                                <property name="halign">start</property>
-                                <property name="hexpand">true</property>
-                                <property name="label"
-                                          bind-source="org_schlunzis_neuroevolution_view_components_DirectionBarRow"
-                                          bind-property="title"
-                                          bind-flags="sync-create"/>
-                                <style>
-                                    <class name="dimmed"/>
-                                </style>
-                            </object>
-                        </child>
-                        <child>
-                            <object class="GtkLabel" id="valueLabel">
-                                <property name="halign">end</property>
-                                <property name="label"
-                                          bind-source="org_schlunzis_neuroevolution_view_components_DirectionBarRow"
-                                          bind-property="value-text"
-                                          bind-flags="default"/>
-                                <style>
-                                    <class name="dimmed"/>
-                                    <class name="numeric"/>
-                                </style>
-                            </object>
-                        </child>
+                    <object class="GtkLevelBar" id="levelBarLeft">
+                        <property name="inverted">true</property>
                     </object>
                 </child>
                 <child>
-                    <object class="GtkBox">
-                        <property name="orientation">horizontal</property>
-                        <property name="homogeneous">true</property>
-                        <child>
-                            <object class="GtkLevelBar" id="levelBarLeft">
-                                <property name="inverted">true</property>
-                            </object>
-                        </child>
-                        <child>
-                            <object class="GtkLevelBar" id="levelBarRight">
-                            </object>
-                        </child>
+                    <object class="GtkLevelBar" id="levelBarRight">
                     </object>
                 </child>
             </object>
