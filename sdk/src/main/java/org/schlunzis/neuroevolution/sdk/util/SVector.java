@@ -9,6 +9,8 @@ package org.schlunzis.neuroevolution.sdk.util;
 /// @param z the third dimensions
 public record SVector(double x, double y, double z) {
 
+    private static final SVector ZERO = new SVector(0, 0, 0);
+
     /// Constructs a new vector where all dimensions are set to zero.
     public SVector() {
         this(0, 0);
@@ -34,40 +36,9 @@ public record SVector(double x, double y, double z) {
         );
     }
 
-    /// Convenience method for operation chaining.
-    ///
-    /// @param other the vector to add to this vector
-    /// @return a new vector that is the sum of this vector and the given vector
-    /// @see SVector#add(SVector, SVector)
-    public SVector add(SVector other) {
-        return add(this, other);
-    }
-
-    /// Convenience method for operation chaining.
-    ///
-    /// @param other the vector to subtract from this vector
-    /// @return a new vector that is the difference of this vector and the given vector
-    /// @see SVector#sub(SVector, SVector)
-    public SVector sub(SVector other) {
-        return sub(this, other);
-    }
-
-    /// Convenience method for operation chaining.
-    ///
-    /// @param factor the factor to multiply this vector with
-    /// @return a new vector that is the product of this vector and the given factor
-    /// @see SVector#mult(SVector, double)
-    public SVector mult(double factor) {
-        return mult(this, factor);
-    }
-
-    /// Convenience method for operation chaining.
-    ///
-    /// @param factor the factor to divide this vector by
-    /// @return a new vector that is the quotient of this vector and the given factor
-    /// @see SVector#div(SVector, double)
-    public SVector div(double factor) {
-        return div(this, factor);
+    /// Returns the zero vector singleton.
+    public static SVector zero() {
+        return ZERO;
     }
 
     /// Adds two vectors together componentwise and returns the result as a new vector.
@@ -112,6 +83,62 @@ public record SVector(double x, double y, double z) {
     /// @return a new vector that is the quotient of `v` and `factor`
     public static SVector div(SVector v, double factor) {
         return new SVector(v.x() / factor, v.y() / factor, v.z() / factor);
+    }
+
+    /// Returns a new vector pointing in the direction of the given angle, with a magnitude of 1.
+    /// The angle is measured in radians, where the following vectors are created:
+    ///
+    /// | Angle (radians) | Vector (x, y) |
+    /// |-----------------|--------|
+    /// | -PI | (-1, 0) |
+    /// | -(PI / 2) | (0, -1) |
+    /// | 0 | (1, 0) |
+    /// | PI / 2 | (0, 1) |
+    /// | PI | (-1, 0) |
+    /// | 3 * (PI / 2) | (0, -1) |
+    ///
+    /// z is always zero.
+    ///
+    /// @param angle the angle of the new vector in radians
+    /// @return a new vector pointing in the direction of the given angle, with a magnitude of 1
+    public static SVector fromAngle(double angle) {
+        return new SVector(Math.cos(angle), Math.sin(angle));
+    }
+
+    /// Convenience method for operation chaining.
+    ///
+    /// @param other the vector to add to this vector
+    /// @return a new vector that is the sum of this vector and the given vector
+    /// @see SVector#add(SVector, SVector)
+    public SVector add(SVector other) {
+        return add(this, other);
+    }
+
+    /// Convenience method for operation chaining.
+    ///
+    /// @param other the vector to subtract from this vector
+    /// @return a new vector that is the difference of this vector and the given vector
+    /// @see SVector#sub(SVector, SVector)
+    public SVector sub(SVector other) {
+        return sub(this, other);
+    }
+
+    /// Convenience method for operation chaining.
+    ///
+    /// @param factor the factor to multiply this vector with
+    /// @return a new vector that is the product of this vector and the given factor
+    /// @see SVector#mult(SVector, double)
+    public SVector mult(double factor) {
+        return mult(this, factor);
+    }
+
+    /// Convenience method for operation chaining.
+    ///
+    /// @param factor the factor to divide this vector by
+    /// @return a new vector that is the quotient of this vector and the given factor
+    /// @see SVector#div(SVector, double)
+    public SVector div(double factor) {
+        return div(this, factor);
     }
 
     /// Returns the magnitude (the length) of the vector.
@@ -169,26 +196,6 @@ public record SVector(double x, double y, double z) {
             return this.withMag(limit);
         }
         return this;
-    }
-
-    /// Returns a new vector pointing in the direction of the given angle, with a magnitude of 1.
-    /// The angle is measured in radians, where the following vectors are created:
-    ///
-    /// | Angle (radians) | Vector (x, y) |
-    /// |-----------------|--------|
-    /// | -PI | (-1, 0) |
-    /// | -(PI / 2) | (0, -1) |
-    /// | 0 | (1, 0) |
-    /// | PI / 2 | (0, 1) |
-    /// | PI | (-1, 0) |
-    /// | 3 * (PI / 2) | (0, -1) |
-    ///
-    /// z is always zero.
-    ///
-    /// @param angle the angle of the new vector in radians
-    /// @return a new vector pointing in the direction of the given angle, with a magnitude of 1
-    public static SVector fromAngle(double angle) {
-        return new SVector(Math.cos(angle), Math.sin(angle));
     }
 
     /// Returns the angle of this vector in radians.

@@ -45,8 +45,8 @@ public class VehiclesView extends Fixed {
             }
             Vehicle vehicle = view.getVehicle();
             SVector pos = vehicle.getPos();
-            double width = vehicle.getVehicleWidth() * fixedWidth;
-            double height = vehicle.getVehicleHeight() * fixedHeight;
+            double width = Vehicle.getVEHICLE_WIDTH() * fixedWidth;
+            double height = Vehicle.getVEHICLE_HEIGHT() * fixedHeight;
             double posX = (pos.x() * fixedWidth) - width / 2;
             double posY = (pos.y() * fixedHeight) - height / 2;
 
