@@ -5,9 +5,10 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.neuroevolution.sdk.util.Boundary;
 import org.schlunzis.neuroevolution.sdk.util.SVector;
+import org.schlunzis.neuroevolution.util.Geometry;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -18,35 +19,39 @@ import static org.schlunzis.neuroevolution.sdk.util.MathUtils.map;
 @Getter
 public class Vehicle {
 
+    private static final int ALPHA = 60;
+    private static final int DELTA = 15;
+    private static final int RAY_COUNT = ((ALPHA * 2) / DELTA) + 1;
+    private static final double CRASH_DISTANCE = 5 / 400d;
+    private static final double SCALE = 10 / 800d;
+    @Getter
+    private static final double VEHICLE_WIDTH = 1 * SCALE;
+    @Getter
+    private static final double VEHICLE_HEIGHT = 104d / 72d * SCALE;
+    private static final double SIGHT = 1 / 4d;
+    private static final double MAX_FORCE = 0.1 / 400d;
+    private static final int STARTING_LIFESPAN = 20;
+
     private final Genotype genotype;
     private final Random random;
-    private final int alpha = 60;
-    private final int delta = 15;
+    private final Ray[] rays = new Ray[RAY_COUNT];
+    private final SVector startVel;
     @Setter
     private UUID id;
-    private double maxForce = 0.1 / 400d;
-    private double crashDistance = 5 / 400d;
-    private double scale = 10 / 800d;
-    @Getter
-    private double vehicleWidth = 1 * scale;
-    @Getter
-    private double vehicleHeight = 104d / 72d * scale;
-    private double sight = 1 / 4d;
-    private int lifespan = 20;
+    private int lifespan = STARTING_LIFESPAN;
     private int lifeCounter;
     private SVector pos;
     private SVector vel;
     private SVector acc;
-    private SVector startVel;
     private int checkPointFitness;
     private int lapFitness;
     private double fitness;
     @Setter
     private double proportionalFitness;
     private boolean dead;
-    private ArrayList<Ray> rays;
     private int lapCount;
     private int checkpointIndex;
+    private Brain.Outputs lastOutput = new Brain.Outputs(0, 0);
 
     /**
      *
@@ -63,7 +68,7 @@ public class Vehicle {
         lifeCounter = 0;
         dead = false;
         checkpointIndex = 0;
-        pos = new SVector(start);
+        pos = start;
 
         double d2 = 1 / 400d;
         if (startVel == null) {
@@ -73,109 +78,34 @@ public class Vehicle {
         } else
             vel = startVel.normalized().mult(1 / 400d);
 
-        this.startVel = new SVector(vel);
-        acc = new SVector();
-        rays = new ArrayList<>();
-        for (int a = -alpha; a <= alpha; a += delta) {
-            rays.add(new Ray(pos, Math.toRadians(a)));
-        }
+        this.startVel = vel;
+        acc = SVector.zero();
+        updateRays();
 
         if (genotype != null) {
             this.genotype = genotype.copy();
         } else
-            this.genotype = new Genotype(0.1, new Brain(rays.size())); // TODO get starting mutation rate from somewhere else
+            this.genotype = new Genotype(0.1, new Brain(rays.length)); // TODO get starting mutation rate from somewhere else
     }
 
     public Vehicle(SVector start) {
         this(start, null, null);
     }
 
-    static boolean intersectsRotatedRectLine(
-            double cx, double cy,
-            double width, double height,
-            double theta,
-            double ax, double ay,
-            double bx, double by) {
-
-        double hx = width * 0.5;
-        double hy = height * 0.5;
-
-        // 1) Move line into rectangle-centered coordinates
-        double ax0 = ax - cx, ay0 = ay - cy;
-        double bx0 = bx - cx, by0 = by - cy;
-
-        // 2) Rotate by -theta
-        double c = Math.cos(theta);
-        double s = Math.sin(theta);
-
-        double alx = c * ax0 + s * ay0;
-        double aly = -s * ax0 + c * ay0;
-        double blx = c * bx0 + s * by0;
-        double bly = -s * bx0 + c * by0;
-
-        // 3) Segment vs AABB [-hx,hx] x [-hy,hy]
-        double dx = blx - alx;
-        double dy = bly - aly;
-
-        double tMin = 0.0;
-        double tMax = 1.0;
-
-        // X slab
-        if (Math.abs(dx) < 1e-12) {
-            if (alx < -hx || alx > hx) return false;
-        } else {
-            double tx1 = (-hx - alx) / dx;
-            double tx2 = (hx - alx) / dx;
-            if (tx1 > tx2) {
-                double tmp = tx1;
-                tx1 = tx2;
-                tx2 = tmp;
-            }
-            tMin = Math.max(tMin, tx1);
-            tMax = Math.min(tMax, tx2);
-            if (tMin > tMax) return false;
-        }
-
-        // Y slab
-        if (Math.abs(dy) < 1e-12) {
-            if (aly < -hy || aly > hy) return false;
-        } else {
-            double ty1 = (-hy - aly) / dy;
-            double ty2 = (hy - aly) / dy;
-            if (ty1 > ty2) {
-                double tmp = ty1;
-                ty1 = ty2;
-                ty2 = tmp;
-            }
-            tMin = Math.max(tMin, ty1);
-            tMax = Math.min(tMax, ty2);
-            if (tMin > tMax) return false;
-        }
-
-        return true;
-    }
-
     public Vehicle mutate() {
         return new Vehicle(pos, startVel, genotype.mutate());
     }
 
-    public SVector getStartVelocity() {
-        return new SVector(startVel);
-    }
-
-    public void setStartVelocity(SVector vel) {
-        this.startVel = new SVector(vel);
-    }
-
     public void applyForce(SVector force) {
-        acc = acc.add(force);
+        acc = acc.add(force)
+                .withLimit(MAX_FORCE);
     }
 
     public void look(List<Boundary> walls) {
-        double[] inputs = new double[rays.size()];
-        for (int i = 0; i < rays.size(); i++) {
-            Ray ray = rays.get(i);
-            double rec = sight;
+        double[] inputs = new double[rays.length];
+        for (int i = 0; i < rays.length; i++) {
+            Ray ray = rays[i];
+            double rec = SIGHT;
             for (Boundary wall : walls) {
                 SVector pt = ray.cast(wall);
                 if (pt != null) {
@@ -184,11 +114,11 @@ public class Vehicle {
                         rec = d;
                 }
             }
-            inputs[i] = map(rec, 0, sight, 1, 0);
+            inputs[i] = map(rec, 0, SIGHT, 1, 0);
         }
 
         for (Boundary wall : walls) {
-            if (intersectsRotatedRectLine(pos.x(), pos.y(), vehicleWidth, vehicleHeight, vel.rawAngle(),
+            if (Geometry.intersectsRotatedRectLine(pos.x(), pos.y(), VEHICLE_WIDTH, VEHICLE_HEIGHT, vel.rawAngle(),
                     wall.getA().x(), wall.getA().y(), wall.getB().x(), wall.getB().y())) {
                 dead = true;
                 return;
@@ -196,6 +126,7 @@ public class Vehicle {
         }
 
         Brain.Outputs output = genotype.brain().query(inputs, vel.mag());
+        lastOutput = output;
         double angle = output.desiredAngle();
         double speed = output.desiredSpeed();
         angle += vel.rawAngle();
@@ -210,22 +141,19 @@ public class Vehicle {
             pos = pos.add(vel);
             vel = vel.add(acc)
                     .withLimit(MAX_SPEED);
-            acc = acc.mult(0);
+            acc = SVector.zero();
             lifeCounter++;
             if (lifeCounter > lifespan) {
                 dead = true;
             }
-            rays = new ArrayList<>();
-            for (int a = -alpha; a <= alpha; a += delta) {
-                rays.add(new Ray(this.pos, Math.toRadians(a) + this.vel.rawAngle()));
-            }
+            updateRays();
         }
     }
 
     public void check(List<Boundary> checkpoints) {
         Boundary goal = checkpoints.get(checkpointIndex);
-        double d = pldistance(goal.getA(), goal.getB(), pos.x(), pos.y());
-        if (d < crashDistance) {
+        double d = Geometry.pldistance(goal.getA(), goal.getB(), pos.x(), pos.y());
+        if (d < CRASH_DISTANCE) {
             checkpointIndex = ++checkpointIndex % checkpoints.size();
             if (checkpointIndex == 0) {
                 lapCount++;
@@ -244,29 +172,34 @@ public class Vehicle {
         newFitness += (checkPointFitness % checkpoints.size()) / (double) checkpoints.size();
 
         Boundary goal = checkpoints.get(checkpointIndex);
-        double d = pldistance(goal.getA(), goal.getB(), pos.x(), pos.y());
+        double d = Geometry.pldistance(goal.getA(), goal.getB(), pos.x(), pos.y());
         newFitness += map(d, 0, 1, 0.0001, 0);
 
-        if (newFitness < fitness) {
-            System.out.println("Are you dumb?");
-        }
         this.fitness = newFitness;
     }
 
-    private double pldistance(SVector p1, SVector p2, double x, double y) {
-        double num = Math.abs((p2.y() - p1.y()) * x - (p2.x() - p1.x()) * y + p2.x() * p1.y() - p2.y() * p1.x());
-        double den = p1.dist(p2);
-        return num / den;
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Vehicle vehicle)) return false;
+        return Objects.equals(id, vehicle.id);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null && obj instanceof Vehicle v && v.id.equals(id);
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public Vehicle copyWithPos(SVector pos) {
         Vehicle copy = new Vehicle(pos, startVel, genotype.copy());
         copy.setId(id);
         return copy;
+    }
+
+    private void updateRays() {
+        int index = 0;
+        for (int a = -ALPHA; a <= ALPHA; a += DELTA) {
+            rays[index] = new Ray(this.pos, Math.toRadians(a) + this.vel.rawAngle());
+            index++;
+        }
     }
 }

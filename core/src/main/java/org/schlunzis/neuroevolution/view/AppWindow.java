@@ -1,6 +1,7 @@
 package org.schlunzis.neuroevolution.view;
 
 import org.gnome.adw.ApplicationWindow;
+import org.gnome.adw.TabPage;
 import org.gnome.adw.TabView;
 import org.gnome.gio.MenuModel;
 import org.gnome.gtk.GtkBuilder;
@@ -16,8 +17,14 @@ import org.schlunzis.neuroevolution.view.simulation.VehiclesView;
 import org.schlunzis.neuroevolution.view.tabs.SimulationTab;
 import org.schlunzis.neuroevolution.view.tabs.VehicleTab;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 @GtkTemplate(ui = "/org/schlunzis/neuroevolution/window.ui")
 public class AppWindow extends ApplicationWindow {
+
+    private final Map<UUID, VehicleTabInfo> vehicleTabs = new HashMap<>();
 
     @GtkChild
     public MenuButton gears;
@@ -44,6 +51,7 @@ public class AppWindow extends ApplicationWindow {
             controller = new SimulationController(world, () -> {
                 simulationView.update();
                 simulationTab.update();
+                vehicleTabs.values().forEach(t -> t.tab().update());
             });
             simulationTab.setController(controller);
 
@@ -54,16 +62,35 @@ public class AppWindow extends ApplicationWindow {
 
             simulationView.getVehiclesView().connect("selected",
                     (VehiclesView.Selected) vehicle -> showVehicleTab(vehicle.getVehicle()));
+            tab_view.onClosePage(page -> {
+                UUID id = vehicleTabs.entrySet().stream()
+                        .filter(e -> e.getValue().page() == page)
+                        .map(Map.Entry::getKey)
+                        .findFirst()
+                        .orElseThrow();
+                vehicleTabs.remove(id);
+                return false;
+
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void showVehicleTab(Vehicle vehicle) {
-        // TODO check for existing page for the vehicle
-        VehicleTab vehicleTab = new VehicleTab(vehicle);
-        vehicleTab.setController(controller);
-        tab_view.addPage(vehicleTab, null);
+        VehicleTabInfo info = vehicleTabs.computeIfAbsent(vehicle.getId(),
+                _ -> {
+                    VehicleTab tab = new VehicleTab(controller, vehicle);
+                    TabPage page = tab_view.addPage(tab, null);
+                    page.setTitle(vehicle.getId().toString().substring(0, 5));
+                    return new VehicleTabInfo(tab, page);
+                }
+        );
+        tab_view.setSelectedPage(info.page());
+    }
+
+    private record VehicleTabInfo(VehicleTab tab, TabPage page) {
+
     }
 
 }

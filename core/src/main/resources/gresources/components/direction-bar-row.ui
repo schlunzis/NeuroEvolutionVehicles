@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="org_schlunzis_neuroevolution_view_components_DirectionBarRow"
+              parent="org_schlunzis_neuroevolution_view_components_CustomRow">
+        <property name="activatable">false</property>
+        <property name="content">
+            <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="homogeneous">true</property>
+                <child>
+                    <object class="GtkLevelBar" id="levelBarLeft">
+                        <property name="inverted">true</property>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkLevelBar" id="levelBarRight">
+                    </object>
+                </child>
+            </object>
+        </property>
+    </template>
+</interface>
