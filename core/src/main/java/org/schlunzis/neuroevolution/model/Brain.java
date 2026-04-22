@@ -1,6 +1,7 @@
 package org.schlunzis.neuroevolution.model;
 
 import org.schlunzis.zis.ai.nn.GeneticNeuralNetwork;
+import org.schlunzis.zis.math.linear.Matrix;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,14 +36,16 @@ public class Brain {
     }
 
     public Outputs query(double[] rays, double currentSpeed) {
-        double[][] inputs = new double[1][rays.length + 1];
-        System.arraycopy(rays, 0, inputs[0], 0, rays.length);
-        inputs[0][rays.length] = currentSpeed;
+        Matrix inputs = new Matrix(rays.length + 1, 1);
+        for (int i = 0; i < rays.length; i++) {
+            inputs.set(i, 0, rays[i]);
+        }
+        inputs.set(rays.length, 0, currentSpeed);
 
-        double[][] output = network.query(inputs).toArray();
+        Matrix output = network.query(inputs);
 
-        double angle = map(output[0][0], 0, 1, -Math.PI, Math.PI);
-        double speed = map(output[1][0], 0, 1, 0, MAX_SPEED);
+        double angle = map(output.get(0, 0), 0, 1, -Math.PI, Math.PI);
+        double speed = map(output.get(1, 0), 0, 1, 0, MAX_SPEED);
 
         return new Outputs(
                 angle,
