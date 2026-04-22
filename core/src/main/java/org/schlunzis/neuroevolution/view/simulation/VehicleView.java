@@ -14,7 +14,7 @@ import org.schlunzis.neuroevolution.model.Vehicle;
 
 public class VehicleView extends DrawingArea {
 
-    private static Texture carTexture;
+    private static final Texture carTexture;
 
     static {
         carTexture = Texture.fromResource("/org/schlunzis/neuroevolution/images/car-top-view.svg");

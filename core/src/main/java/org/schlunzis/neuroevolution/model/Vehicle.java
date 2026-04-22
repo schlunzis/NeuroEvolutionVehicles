@@ -51,7 +51,6 @@ public class Vehicle {
     private boolean dead;
     private int lapCount;
     private int checkpointIndex;
-    private Brain.Outputs lastOutput = new Brain.Outputs(0, 0);
 
     /**
      *
@@ -117,8 +116,9 @@ public class Vehicle {
             inputs[i] = map(rec, 0, SIGHT, 1, 0);
         }
 
+        double velAngle = vel.rawAngle();
         for (Boundary wall : walls) {
-            if (Geometry.intersectsRotatedRectLine(pos.x(), pos.y(), VEHICLE_WIDTH, VEHICLE_HEIGHT, vel.rawAngle(),
+            if (Geometry.intersectsRotatedRectLine(pos.x(), pos.y(), VEHICLE_WIDTH, VEHICLE_HEIGHT, velAngle,
                     wall.getA().x(), wall.getA().y(), wall.getB().x(), wall.getB().y())) {
                 dead = true;
                 return;
@@ -126,7 +126,6 @@ public class Vehicle {
         }
 
         Brain.Outputs output = genotype.brain().query(inputs, vel.mag());
-        lastOutput = output;
         double angle = output.desiredAngle();
         double speed = output.desiredSpeed();
         angle += vel.rawAngle();
