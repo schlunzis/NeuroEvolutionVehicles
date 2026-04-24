@@ -1,5 +1,6 @@
 package org.schlunzis.neuroevolution.view.tabs;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.gnome.adw.ActionRow;
 import org.gnome.gio.File;
@@ -7,23 +8,21 @@ import org.gnome.gtk.Box;
 import org.gnome.gtk.FileDialog;
 import org.gnome.gtk.FileFilter;
 import org.javagi.base.GErrorException;
+import org.javagi.gobject.annotations.InstanceInit;
 import org.javagi.gtk.annotations.GtkCallback;
 import org.javagi.gtk.annotations.GtkChild;
 import org.javagi.gtk.annotations.GtkTemplate;
 import org.schlunzis.neuroevolution.model.Vehicle;
 import org.schlunzis.neuroevolution.sdk.Constants;
-import org.schlunzis.neuroevolution.simulation.SimulationController;
 import org.schlunzis.neuroevolution.view.components.DirectionBarRow;
 import org.schlunzis.neuroevolution.view.components.LevelBarRow;
 
 import java.io.IOException;
+import java.lang.foreign.MemorySegment;
 
 @Slf4j
 @GtkTemplate(ui = "/org/schlunzis/neuroevolution/vehicle-tab.ui")
 public class VehicleTab extends Box {
-
-    private final SimulationController controller;
-    private final Vehicle vehicleToShow;
 
     @GtkChild
     public ActionRow idRow;
@@ -42,14 +41,19 @@ public class VehicleTab extends Box {
     @GtkChild
     public LevelBarRow desiredVelocityBar;
 
-    public VehicleTab(SimulationController controller, Vehicle vehicle) {
-        this.controller = controller;
-        this.vehicleToShow = vehicle;
+    @Getter
+    private Vehicle vehicleToShow;
 
-        idRow.setSubtitle(vehicle.getId().toString());
+    public VehicleTab(MemorySegment address) {
+        super(address);
+    }
 
-        mutationRateRow.setSubtitle(Double.toString(vehicle.getGenotype().mutationRate()));
+    public VehicleTab(Vehicle vehicle) {
+        setVehicleToShow(vehicle);
+    }
 
+    @InstanceInit
+    public void init() {
         lifespanBar.setMinValue(0);
         velocityBar.setMinValue(0);
         velocityBar.setMaxValue(Constants.MAX_SPEED);
@@ -59,7 +63,16 @@ public class VehicleTab extends Box {
         desiredVelocityBar.setMaxValue(Constants.MAX_SPEED);
     }
 
+    public void setVehicleToShow(Vehicle vehicleToShow) {
+        this.vehicleToShow = vehicleToShow;
+        if (vehicleToShow == null) return;
+        idRow.setSubtitle(vehicleToShow.getId().toString());
+        mutationRateRow.setSubtitle(Double.toString(vehicleToShow.getGenotype().mutationRate()));
+    }
+
     public void update() {
+        if (vehicleToShow == null) return;
+
         if (vehicleToShow.isDead()) {
             stateRow.setSubtitle("Dead");
             stateRow.removeCssClass("success");

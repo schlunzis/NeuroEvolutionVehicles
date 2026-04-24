@@ -13,6 +13,7 @@ import org.schlunzis.neuroevolution.view.simulation.TrackView;
 import org.schlunzis.neuroevolution.view.simulation.VehicleView;
 import org.schlunzis.neuroevolution.view.simulation.VehiclesView;
 import org.schlunzis.neuroevolution.view.tabs.SimulationTab;
+import org.schlunzis.neuroevolution.view.tabs.VehicleTab;
 
 public class Launcher {
 
@@ -22,6 +23,7 @@ public class Launcher {
         TemplateTypes.register(DirectionBarRow.class);
         TemplateTypes.register(SimulationView.class);
         TemplateTypes.register(SimulationTab.class);
+        TemplateTypes.register(VehicleTab.class);
 
         Types.register(TrackView.class);
         Types.register(VehiclesView.class);

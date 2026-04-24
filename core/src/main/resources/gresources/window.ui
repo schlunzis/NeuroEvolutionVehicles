@@ -55,6 +55,16 @@
                                                 </property>
                                             </object>
                                         </child>
+                                        <child>
+                                            <object class="AdwTabPage">
+                                                <property name="title">Vehicle</property>
+                                                <property name="child">
+                                                    <object class="org_schlunzis_neuroevolution_view_tabs_VehicleTab"
+                                                            id="staticVehicleTab">
+                                                    </object>
+                                                </property>
+                                            </object>
+                                        </child>
                                     </object>
                                 </child>
                             </object>

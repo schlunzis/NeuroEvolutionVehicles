@@ -1,7 +1,6 @@
 package org.schlunzis.neuroevolution.view.simulation;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.freedesktop.cairo.Context;
 import org.gnome.gdk.Texture;
 import org.gnome.graphene.Point;
@@ -23,8 +22,6 @@ public class VehicleView extends DrawingArea {
     @Getter
     private final Vehicle vehicle;
     private double angleDeg;
-    @Setter
-    private boolean highlight = false;
 
     public VehicleView(Vehicle vehicle) {
         this.vehicle = vehicle;
@@ -36,13 +33,12 @@ public class VehicleView extends DrawingArea {
     }
 
     private void draw(DrawingArea drawingArea, Context cr, int width, int height) {
-        if (highlight) {
-            cr.setSourceRGB(1, 1, 0);
-        } else {
+        if (vehicle.getHighlightMode() == Vehicle.HighlightMode.STATIC_TAB) {
             cr.setSourceRGB(1, 0, 0);
+            cr.rectangle(0, 0, width, height);
+            cr.setLineWidth(5);
+            cr.stroke();
         }
-//        cr.rectangle(0, 0, width, height);
-        cr.stroke();
     }
 
     public boolean isFinished() {

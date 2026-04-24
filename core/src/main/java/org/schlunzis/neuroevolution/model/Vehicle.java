@@ -52,6 +52,9 @@ public class Vehicle {
     private int lapCount;
     private int checkpointIndex;
 
+    @Setter
+    private HighlightMode highlightMode = HighlightMode.NONE;
+
     /**
      *
      * @param start
@@ -200,5 +203,10 @@ public class Vehicle {
             rays[index] = new Ray(this.pos, Math.toRadians(a) + this.vel.rawAngle());
             index++;
         }
+    }
+
+    public enum HighlightMode {
+        NONE,
+        STATIC_TAB
     }
 }
