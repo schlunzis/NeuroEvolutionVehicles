@@ -7,9 +7,11 @@ public record Genotype(
         Brain brain
 ) {
 
+    private static final double LEARNING_RATE = 0.001;
+
     public Genotype mutate() {
         double z = ThreadLocalRandom.current().nextGaussian();
-        double newMutationRate = mutationRate * Math.exp(0.001 * z);
+        double newMutationRate = mutationRate * Math.exp(LEARNING_RATE * z);
         return new Genotype(newMutationRate, brain.mutate(mutationRate));
     }
 

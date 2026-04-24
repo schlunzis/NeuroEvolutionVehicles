@@ -21,6 +21,7 @@ public class Brain {
     private Outputs lastOutput = new Outputs();
 
     public Brain(int rayCount) {
+        // Mutation rate is 0.01 as the default mutation rate for weights and biases. DO NOT SET TO ZERO!
         this(new GeneticNeuralNetwork(0, 0.01, rayCount + 1 + 2 + MEMORY_NODES, 2 + MEMORY_NODES, rayCount * 2));
     }
 
