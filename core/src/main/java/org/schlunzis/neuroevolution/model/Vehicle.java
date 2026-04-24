@@ -191,8 +191,8 @@ public class Vehicle {
         return Objects.hashCode(id);
     }
 
-    public Vehicle copyWithPos(SVector pos) {
-        Vehicle copy = new Vehicle(pos, startVel, genotype.copy());
+    public Vehicle copyWithNewStart(SVector pos, SVector vel) {
+        Vehicle copy = new Vehicle(pos, vel, genotype.copy());
         copy.setId(id);
         return copy;
     }
