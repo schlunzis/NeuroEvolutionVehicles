@@ -66,7 +66,7 @@
         <dependency>
             <groupId>com.github.schlunzis.ze-impressive-schwifty</groupId>
             <artifactId>zis-ai</artifactId>
-            <version>da3e9c1dbdb41bb8d4991bc5443ad7a516b2a094</version>
+            <version>cb2c5393787acbea73cf180c0d7799fd908ae5b0</version>
         </dependency>
         <!-- to be removed -->
         <dependency>

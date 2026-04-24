@@ -72,8 +72,8 @@ public class VehicleTab extends Box {
         lifespanBar.setMaxValue(vehicleToShow.getLifespan() + 1); // +1 since it dies when the counter is greater than the lifespan
         lifespanBar.setValue(vehicleToShow.getLifeCounter());
         velocityBar.setValue(vehicleToShow.getVel().mag());
-        desiredAngleBar.setValue(vehicleToShow.getLastOutput().desiredAngle());
-        desiredVelocityBar.setValue(vehicleToShow.getLastOutput().desiredSpeed());
+        desiredAngleBar.setValue(vehicleToShow.getGenotype().brain().getLastOutput().desiredAngle());
+        desiredVelocityBar.setValue(vehicleToShow.getGenotype().brain().getLastOutput().desiredSpeed());
     }
 
     @GtkCallback
