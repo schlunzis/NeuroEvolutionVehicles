@@ -29,7 +29,7 @@ public class Vehicle {
     @Getter
     private static final double VEHICLE_HEIGHT = 104d / 72d * SCALE;
     private static final double SIGHT = 1 / 4d;
-    private static final double MAX_FORCE = 0.1 / 400d;
+    private static final double MAX_FORCE = 0.001;
     private static final int STARTING_LIFESPAN = 20;
 
     private final Genotype genotype;
