@@ -61,6 +61,7 @@ public class AppWindow extends ApplicationWindow {
                     staticVehicleTab.update();
                 }
             });
+            controller.getWorld().getGa().addNewGenerationHook(this::replaceVehicleInStaticTab);
             simulationTab.setController(controller);
 
             GtkBuilder builder = GtkBuilder.fromResource("/org/schlunzis/neuroevolution/gears-menu.ui");
