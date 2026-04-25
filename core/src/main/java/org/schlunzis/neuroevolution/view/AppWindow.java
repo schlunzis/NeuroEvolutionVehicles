@@ -17,6 +17,7 @@ import org.schlunzis.neuroevolution.view.simulation.VehiclesView;
 import org.schlunzis.neuroevolution.view.tabs.SimulationTab;
 import org.schlunzis.neuroevolution.view.tabs.VehicleTab;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -36,6 +37,8 @@ public class AppWindow extends ApplicationWindow {
     public TabView tab_view;
     @GtkChild
     public SimulationTab simulationTab;
+    @GtkChild
+    public VehicleTab staticVehicleTab;
 
     private SimulationController controller;
 
@@ -52,7 +55,13 @@ public class AppWindow extends ApplicationWindow {
                 simulationView.update();
                 simulationTab.update();
                 vehicleTabs.values().forEach(t -> t.tab().update());
+                if (staticVehicleTab.getVehicleToShow() == null || staticVehicleTab.getVehicleToShow().isDead()) {
+                    replaceVehicleInStaticTab();
+                } else {
+                    staticVehicleTab.update();
+                }
             });
+            controller.getWorld().getGa().addNewGenerationHook(this::replaceVehicleInStaticTab);
             simulationTab.setController(controller);
 
             GtkBuilder builder = GtkBuilder.fromResource("/org/schlunzis/neuroevolution/gears-menu.ui");
@@ -77,10 +86,24 @@ public class AppWindow extends ApplicationWindow {
         }
     }
 
+    private void replaceVehicleInStaticTab() {
+        Vehicle current = staticVehicleTab.getVehicleToShow();
+        if (current != null) {
+            current.setHighlightMode(Vehicle.HighlightMode.NONE);
+        }
+
+        controller.getWorld().getGa().getPopulation().stream()
+                .max(Comparator.comparingInt(Vehicle::getCheckPointFitness))
+                .ifPresent(v -> {
+                    staticVehicleTab.setVehicleToShow(v);
+                    v.setHighlightMode(Vehicle.HighlightMode.STATIC_TAB);
+                });
+    }
+
     public void showVehicleTab(Vehicle vehicle) {
         VehicleTabInfo info = vehicleTabs.computeIfAbsent(vehicle.getId(),
                 _ -> {
-                    VehicleTab tab = new VehicleTab(controller, vehicle);
+                    VehicleTab tab = new VehicleTab(vehicle);
                     TabPage page = tab_view.addPage(tab, null);
                     page.setTitle(vehicle.getId().toString().substring(0, 5));
                     return new VehicleTabInfo(tab, page);

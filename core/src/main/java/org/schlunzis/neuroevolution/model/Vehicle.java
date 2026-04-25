@@ -52,6 +52,9 @@ public class Vehicle {
     private int lapCount;
     private int checkpointIndex;
 
+    @Setter
+    private HighlightMode highlightMode = HighlightMode.NONE;
+
     /**
      *
      * @param start
@@ -188,8 +191,8 @@ public class Vehicle {
         return Objects.hashCode(id);
     }
 
-    public Vehicle copyWithPos(SVector pos) {
-        Vehicle copy = new Vehicle(pos, startVel, genotype.copy());
+    public Vehicle copyWithNewStart(SVector pos, SVector vel) {
+        Vehicle copy = new Vehicle(pos, vel, genotype.copy());
         copy.setId(id);
         return copy;
     }
@@ -200,5 +203,10 @@ public class Vehicle {
             rays[index] = new Ray(this.pos, Math.toRadians(a) + this.vel.rawAngle());
             index++;
         }
+    }
+
+    public enum HighlightMode {
+        NONE,
+        STATIC_TAB
     }
 }

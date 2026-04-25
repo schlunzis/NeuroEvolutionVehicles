@@ -117,7 +117,7 @@ public class GeneticAlgorithm {
         System.out.println("Best fitness: " + prevBest.getFitness());
         System.out.println("Best proportional fitness: " + prevBest.getProportionalFitness());
         System.out.println("Best mutationRate: " + prevBest.getGenotype().mutationRate());
-        population.add(prevBest.copyWithPos(track.getStart()));
+        population.add(prevBest.copyWithNewStart(track.getStart(), getStartVelocity()));
         for (int i = 1; i < populationSize; i++) {
             population.add(pickOne());
         }
