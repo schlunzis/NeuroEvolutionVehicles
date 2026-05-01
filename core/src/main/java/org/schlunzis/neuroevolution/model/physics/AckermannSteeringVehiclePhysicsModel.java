@@ -27,7 +27,7 @@ public class AckermannSteeringVehiclePhysicsModel {
     private Input oldInput = new Input();
 
     public AckermannSteeringVehiclePhysicsModel(double W, double L) {
-        this(W, L, L * 10);
+        this(W, L, L * 300);
     }
 
     public AckermannSteeringVehiclePhysicsModel(double W, double L, double M) {
@@ -46,6 +46,7 @@ public class AckermannSteeringVehiclePhysicsModel {
 
     /// Implements the ComputeModel function as seen on page 8.
     private Output compute(double v, Input input, double dt) {
+        System.out.println(input);
         double beta = oldInput.beta();
         double dBeta = input.beta() - oldInput.beta();
         double T_ef = oldInput.T_ef();
@@ -91,16 +92,14 @@ public class AckermannSteeringVehiclePhysicsModel {
 
         SVector F_tracr = new SVector(0, F_tracry).add(F_cpr).add(F_rotr);
 
-        oldInput = new Input(
-                input.beta(),
-                input.T_ef(),
-                input.T_er()
-        );
+        oldInput = input;
 
-        return new Output(
+        Output output = new Output(
                 a * pow(dt, 2) / 2,
                 omega * dt + alpha * pow(dt, 2) / 2
         );
+        System.out.println(output);
+        return output;
     }
 
     /// 21
@@ -157,7 +156,7 @@ public class AckermannSteeringVehiclePhysicsModel {
     ) {
 
         public Input() {
-            this(0, 0.5, 0.5);
+            this(0, 0, 0);
         }
 
         public Input withBeta(double beta) {

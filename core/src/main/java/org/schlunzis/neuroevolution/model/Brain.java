@@ -62,8 +62,8 @@ public class Brain {
 
         Matrix output = network.query(inputs);
 
-        double angle = Math.clamp(map(output.get(0, 0), -1, 1, -Math.PI / 2, Math.PI / 2), -Math.PI / 2, Math.PI / 2);
-        double speed = map(output.get(1, 0), -1, 1, -1, 1);
+        double angle = map(output.get(0, 0), 0, 1, -Math.PI / 2, Math.PI / 2);
+        double torque = map(output.get(1, 0), 0, 1, -1, 1);
 
         double[] memory = lastOutput.memory;
         for (int i = 0; i < memory.length; i++) {
@@ -72,7 +72,7 @@ public class Brain {
 
         lastOutput = new Outputs(
                 angle,
-                speed,
+                torque,
                 lastOutput.memory
         );
         return lastOutput;

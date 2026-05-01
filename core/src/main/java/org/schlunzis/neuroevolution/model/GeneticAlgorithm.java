@@ -75,7 +75,7 @@ public class GeneticAlgorithm {
             for (int c = 0; c < cycles; c++) {
 
                 population.stream()
-                        .parallel()
+//                        .parallel()
                         .forEach(v -> {
                             v.look(track.getWalls());
                             v.check(track.getCheckpoints());

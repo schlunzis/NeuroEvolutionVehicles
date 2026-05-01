@@ -39,7 +39,7 @@ public class VehicleTab extends Box {
     @GtkChild
     public DirectionBarRow desiredAngleBar;
     @GtkChild
-    public LevelBarRow desiredVelocityBar;
+    public DirectionBarRow torqueBar;
 
     @Getter
     private Vehicle vehicleToShow;
@@ -59,8 +59,8 @@ public class VehicleTab extends Box {
         velocityBar.setMaxValue(Constants.MAX_SPEED);
         desiredAngleBar.setMinValue(-Math.PI / 2);
         desiredAngleBar.setMaxValue(Math.PI / 2);
-        desiredVelocityBar.setMinValue(-1);
-        desiredVelocityBar.setMaxValue(1);
+        torqueBar.setMinValue(-1);
+        torqueBar.setMaxValue(1);
     }
 
     public void setVehicleToShow(Vehicle vehicleToShow) {
@@ -86,7 +86,7 @@ public class VehicleTab extends Box {
         lifespanBar.setValue(vehicleToShow.getLifeCounter());
         velocityBar.setValue(vehicleToShow.getVel().mag());
         desiredAngleBar.setValue(vehicleToShow.getGenotype().brain().getLastOutput().steeringAngle());
-        desiredVelocityBar.setValue(vehicleToShow.getGenotype().brain().getLastOutput().torque());
+        torqueBar.setValue(vehicleToShow.getGenotype().brain().getLastOutput().torque());
     }
 
     @GtkCallback
