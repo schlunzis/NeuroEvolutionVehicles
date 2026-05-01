@@ -37,13 +37,13 @@ public class DirectionBarRow extends CustomRow {
 
     public void setMinValue(double minValue) {
         this.minValue = minValue;
-        levelBarLeft.setMaxValue(-minValue / 2);
+        levelBarLeft.setMaxValue(-minValue);
         this.notify("min-value");
     }
 
     public void setMaxValue(double maxValue) {
         this.maxValue = maxValue;
-        levelBarRight.setMaxValue(maxValue / 2);
+        levelBarRight.setMaxValue(maxValue);
         this.notify("max-value");
     }
 

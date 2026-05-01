@@ -119,9 +119,9 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="org_schlunzis_neuroevolution_view_components_LevelBarRow"
-                                                    id="desiredVelocityBar">
-                                                <property name="title">Desired Velocity</property>
+                                            <object class="org_schlunzis_neuroevolution_view_components_DirectionBarRow"
+                                                    id="torqueBar">
+                                                <property name="title">Torque</property>
                                             </object>
                                         </child>
                                     </object>

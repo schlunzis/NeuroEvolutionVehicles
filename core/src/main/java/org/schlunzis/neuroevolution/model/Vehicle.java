@@ -3,6 +3,7 @@ package org.schlunzis.neuroevolution.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.neuroevolution.model.physics.AckermannSteeringVehiclePhysicsModel;
 import org.schlunzis.neuroevolution.sdk.util.Boundary;
 import org.schlunzis.neuroevolution.sdk.util.SVector;
 import org.schlunzis.neuroevolution.util.Geometry;
@@ -30,12 +31,13 @@ public class Vehicle {
     private static final double VEHICLE_HEIGHT = 104d / 72d * SCALE;
     private static final double SIGHT = 1 / 4d;
     private static final double MAX_FORCE = 0.001;
-    private static final int STARTING_LIFESPAN = 20;
+    private static final int STARTING_LIFESPAN = 30;
 
     private final Genotype genotype;
     private final Random random;
     private final Ray[] rays = new Ray[RAY_COUNT];
     private final SVector startVel;
+    private final AckermannSteeringVehiclePhysicsModel physicsModel = new AckermannSteeringVehiclePhysicsModel(VEHICLE_WIDTH, VEHICLE_HEIGHT);
     @Setter
     private UUID id;
     private int lifespan = STARTING_LIFESPAN;
@@ -129,13 +131,15 @@ public class Vehicle {
         }
 
         Brain.Outputs output = genotype.brain().query(inputs, vel.mag());
-        double angle = output.desiredAngle();
-        double speed = output.desiredSpeed();
-        angle += vel.rawAngle();
-        SVector steering = SVector.fromAngle(angle)
-                .withMag(speed)
-                .sub(vel);
-        applyForce(steering);
+        double angle = output.steeringAngle();
+        double torque = output.torque();
+        AckermannSteeringVehiclePhysicsModel.Output physicsOutput = physicsModel.compute(vel.mag(), angle, torque, 1);
+        SVector velDirection = vel.rotate(physicsOutput.theta());
+        if (physicsOutput.a() > 0) {
+            applyForce(velDirection.withMag(physicsOutput.a()));
+        } else {
+            applyForce(velDirection.rotate(Math.PI).withMag(-physicsOutput.a()));
+        }
     }
 
     public void update() {

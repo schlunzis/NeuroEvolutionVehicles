@@ -74,12 +74,13 @@ public class GeneticAlgorithm {
 
             for (int c = 0; c < cycles; c++) {
 
-                for (Vehicle v : population) {
-                    v.look(track.getWalls());
-                    v.check(track.getCheckpoints());
-                    v.update();
-
-                }
+                population.stream()
+//                        .parallel()
+                        .forEach(v -> {
+                            v.look(track.getWalls());
+                            v.check(track.getCheckpoints());
+                            v.update();
+                        });
 
                 for (int i = population.size() - 1; i >= 0; i--) {
                     Vehicle v = population.get(i);
