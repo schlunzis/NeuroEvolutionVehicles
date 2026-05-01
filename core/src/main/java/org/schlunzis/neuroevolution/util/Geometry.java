@@ -78,4 +78,8 @@ public class Geometry {
         return num / den;
     }
 
+    public static double cot(double a) {
+        return 1 / Math.tan(a);
+    }
+
 }

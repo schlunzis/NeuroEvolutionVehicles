@@ -7,7 +7,6 @@ import org.schlunzis.zis.math.linear.Matrix;
 import java.io.File;
 import java.io.IOException;
 
-import static org.schlunzis.neuroevolution.sdk.Constants.MAX_SPEED;
 import static org.schlunzis.neuroevolution.sdk.util.MathUtils.map;
 import static org.schlunzis.zis.ai.nn.NeuralNetwork.deserialize;
 
@@ -54,8 +53,8 @@ public class Brain {
         }
         inputs.set(rays.length, 0, currentSpeed);
 
-        inputs.set(rays.length + 1, 0, lastOutput.desiredAngle());
-        inputs.set(rays.length + 2, 0, lastOutput.desiredSpeed());
+        inputs.set(rays.length + 1, 0, lastOutput.steeringAngle());
+        inputs.set(rays.length + 2, 0, lastOutput.torque());
 
         for (int i = 0; i < lastOutput.memory().length; i++) {
             inputs.set(rays.length + 3 + i, 0, lastOutput.memory()[i]);
@@ -63,8 +62,8 @@ public class Brain {
 
         Matrix output = network.query(inputs);
 
-        double angle = map(output.get(0, 0), 0, 1, -Math.PI, Math.PI);
-        double speed = map(output.get(1, 0), 0, 1, 0, MAX_SPEED);
+        double angle = Math.clamp(map(output.get(0, 0), -1, 1, -Math.PI / 2, Math.PI / 2), -Math.PI / 2, Math.PI / 2);
+        double speed = map(output.get(1, 0), -1, 1, -1, 1);
 
         double[] memory = lastOutput.memory;
         for (int i = 0; i < memory.length; i++) {
@@ -84,8 +83,8 @@ public class Brain {
     }
 
     public record Outputs(
-            double desiredAngle,
-            double desiredSpeed,
+            double steeringAngle,
+            double torque,
             double[] memory
     ) {
 
